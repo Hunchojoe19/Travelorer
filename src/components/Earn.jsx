@@ -5,7 +5,7 @@ const Earn = () => {
         <section className="py-24 bg-white">
             <div className="text-center mb-16">
                 <h2 className="text-4xl font-bold text-gray-900">Earn</h2>
-                <p className="text-gray-400 text-sm mt-2 uppercase tracking-wide">A smart way to turn your passion into profits</p>
+                <p className="text-gray-400 text-sm mt-2 tracking-wide">A smart way to turn your passion into profits</p>
             </div>
 
             <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-16">

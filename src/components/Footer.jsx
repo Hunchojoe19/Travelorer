@@ -1,10 +1,12 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { FaFingerprint, FaChartLine, FaRobot, FaMobileAlt, FaComments } from 'react-icons/fa';
 
 /**
  * Merging Earn content visually with Footer to achieve the overlap effect perfectly.
  */
 const CombinedFooter = () => {
+    const evaluate_Image = "https://res.cloudinary.com/dc59hhvse/image/upload/v1768155133/Evaluate_Predict_g1s5tw.png"
 
     // Feature grid items
     const gridItems = [
@@ -22,20 +24,20 @@ const CombinedFooter = () => {
             <section className="pt-24 pb-32 bg-white relative z-10">
                 <div className="text-center mb-20">
                     <h2 className="text-5xl font-bold text-gray-900 mb-2">Earn</h2>
-                    <p className="text-gray-400 text-sm uppercase tracking-wide font-medium">A smart way to turn your passion into profits</p>
+                    <p className="text-gray-400 text-sm sentence tracking-wide font-medium">A smart way to turn your passion into profits</p>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-20">
+                <div className="max-w-9xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-20">
                     <div className="w-full md:w-5/12">
                         <h3 className="text-4xl font-bold text-brand-text mb-6">Become a Creator,<br /> Maximize Returns.</h3>
-                        <p className="text-gray-500 leading-relaxed text-lg">
+                        <p className="text-gray-500 leading-relaxed text-lg lg:max-w-lg">
                             With Earn, you get to list your own
                             experiences and tours, connecting
                             with other avid travelers like you.
                         </p>
                     </div>
                     {/* Phone Mockup that will overlap */}
-                    <div className="w-full md:w-fit flex justify-center relative -mb-48 z-20">
+                    {/* <div className="w-full md:w-fit flex justify-center relative -mb-48 z-20">
                         <div className="relative w-72 bg-white rounded-[3rem] shadow-2xl border-8 border-gray-900 overflow-hidden">
                             <div className="bg-sky-50 h-[500px] pt-10 px-5 pb-4">
                                 <div className="bg-blue-500 h-36 rounded-2xl mb-4 w-full shadow-lg"></div>
@@ -48,9 +50,27 @@ const CombinedFooter = () => {
                                 </div>
                             </div>
                         </div>
-                        {/* Blue Glow behind phone */}
+                       
                         <div className="absolute top-1/2 left-1/2 w-full h-full bg-blue-400 rounded-full filter blur-[100px] opacity-20 -translate-x-1/2 -translate-y-1/2 -z-10"></div>
+                    </div> */}
+                      <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                    className="order-1 md:order-2 h-80 md:h-96"
+                >
+                    {/* Image container with fixed height */}
+                    <div className="h-full w-full flex items-center justify-center p-4">
+                        <motion.img
+                            src={evaluate_Image}
+                            alt="Planning App UI"
+                            className="max-h-full max-w-full object-contain"
+                            whileHover={{ scale: 1.02 }}
+                            transition={{ duration: 0.3 }}
+                        />
                     </div>
+                </motion.div>
                 </div>
             </section>
 

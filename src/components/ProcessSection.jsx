@@ -13,19 +13,23 @@ const ProcessSection = () => {
     return (
         <section className="py-20 bg-white">
             <div className="max-w-4xl mx-auto px-4 text-center">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold mb-8">
-                    <HiSparkles className="text-blue-500" />
+                <div className="inline-flex border border-[#0276FE] items-center gap-2 px-4 py-2 bg-blue-50 text-[#0276FE] rounded-xl text-sm font-semibold mb-8">
+                    <HiSparkles className="text-[#0276FE]" />
                     AI-powered Intelligence
                 </div>
 
-                <h2 className="text-4xl md:text-5xl font-bold text-brand-text mb-6">
+                <h2 className="text-4xl md:text-5xl font-bold text-[#0276FE] mb-6">
                     Got a Destination? <br />
-                    <span className="text-brand-blue">We'll handle the Details</span>
+                    <span className="text-[#0276FE]">We'll handle the Details</span>
                 </h2>
 
-                <p className="text-gray-500 max-w-2xl mx-auto mb-16 leading-relaxed">
+                {/* <p className="text-gray-500 max-w-lg mx-auto mb-16 leading-relaxed">
                     Experience text identification with Tourain for visa options.
                     We use real-time data, documents, and secure verification.
+                </p> */}
+                <p className="text-gray-500 max-w-xl mx-auto mb-16 leading-relaxed">
+                Experience next-level efficiency with Tourain’s AI-driven platform
+                with smart tools that save time, reduce friction, and enhance collaboration.
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-12">

@@ -1,84 +1,76 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const Evaluate = () => {
+    const evaluate_Image = "https://res.cloudinary.com/dc59hhvse/image/upload/v1768155133/Evaluate_Predict_g1s5tw.png"
+    const reapplication_Image = "https://res.cloudinary.com/dc59hhvse/image/upload/v1768155134/Evaluate_Refusal_hcxm2u.png"
     return (
-        <section className="py-20 bg-gray-50/50">
+        <section className="py-20 bg-[#EBEAEA40] space-y-12">
             <div className="text-center mb-16">
                 <h2 className="text-4xl font-bold text-gray-900 mb-2">Evaluate</h2>
-                <p className="text-gray-400 text-sm uppercase tracking-wide">A Transparent way to manage your travel reputation</p>
+                <p className="text-gray-400 text-sm sentence tracking-wide">A Transparent way to manage your travel reputation</p>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="max-w-5xl bg-white mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-0 items-center shadow-lg rounded-lg overflow-hidden">
                 {/* Left Side Content */}
-                <div className="order-2 md:order-1 px-8">
-                    <div className="inline-block px-3 py-1 bg-green-100 text-green-600 text-xs font-bold rounded-full mb-4 uppercase">
-                        Get Credit Score
+                <div className="order-2 md:order-1 p-8">
+                    <div className="w-max flex items-center gap-x-3 px-4 py-3 bg-[#02FE281A] text-[#04E226] border border-[#04E226] text-xs font-bold rounded-full mb-4 uppercase">
+                       <Trend/> Predictive Analytics
                     </div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-4">Test your eligibility,<br /> with confidence.</h3>
-                    <p className="text-gray-500 leading-relaxed mb-8">
-                        Check your immigration interest to determine
-                        and verify financial range, job listings,
-                        and our custom built smart AI detects
-                        inaccurate data.
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">Test your eligibility,<br /> with confidence.</h3>
+                    <p className="text-gray-500 leading-relaxed text-sm">
+                       Predict your immigration outcome by assessing your risks, preferences, budget, and travel history with an instant readiness score to determine actionable steps.
                     </p>
                 </div>
 
-                {/* Right Side Mockup */}
-                <div className="order-1 md:order-2 flex justify-center">
-                    <div className="relative w-64 md:w-72 bg-white rounded-[2.5rem] shadow-2xl border-8 border-gray-900 overflow-hidden">
-                        {/* Simulated Phone Screen */}
-                        <div className="bg-gray-100 h-full pt-8 pb-4 flex flex-col items-center">
-                            <div className="w-full bg-white p-4 mb-2 shadow-sm rounded-b-2xl">
-                                <div className="h-4 w-32 bg-gray-200 rounded mb-2"></div>
-                            </div>
-                            {/* Gauge/Score Visual */}
-                            <div className="mt-8 relative w-40 h-40 flex items-center justify-center">
-                                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                    <circle cx="50" cy="50" r="40" stroke="#f3f4f6" strokeWidth="8" fill="none" />
-                                    <circle cx="50" cy="50" r="40" stroke="#22c55e" strokeWidth="8" fill="none" strokeDasharray="251.2" strokeDashoffset="60" strokeLinecap="round" />
-                                </svg>
-                                <div className="absolute text-5xl font-bold text-gray-900">58</div>
-                            </div>
-
-                            {/* List items */}
-                            <div className="px-4 w-full mt-8 space-y-3">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                                    <div className="h-2 w-full bg-gray-200 rounded"></div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                                    <div className="h-2 w-3/4 bg-gray-200 rounded"></div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                                    <div className="h-2 w-1/2 bg-gray-200 rounded"></div>
-                                </div>
-                            </div>
-                        </div>
+                {/* Right Side Image - Fits inside card */}
+                <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                    className="order-1 md:order-2 h-80 md:h-96"
+                >
+                    {/* Image container with fixed height */}
+                    <div className="h-full w-full flex items-center justify-center p-4">
+                        <motion.img
+                            src={evaluate_Image}
+                            alt="Planning App UI"
+                            className="max-h-full max-w-full object-contain"
+                            whileHover={{ scale: 1.02 }}
+                            transition={{ duration: 0.3 }}
+                        />
                     </div>
-                </div>
+                </motion.div>
             </div>
 
-            {/* Bottom section (Rejections/Reviews) */}
-            <div className="mt-24 max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12 px-6">
-                <div className="relative w-full md:w-1/2 h-64 bg-white rounded-2xl shadow-lg p-6 flex items-center justify-center group hover:shadow-xl transition-shadow">
-                    <div className="text-8xl text-purple-600 opacity-20 group-hover:scale-110 transition-transform">
-                        <FaShieldAlt /> {/* Just reusing an icon as placeholder for Magnifying glass */}
+            {/* Second Card - Image on Left, Text on Right */}
+            <div className="max-w-5xl bg-white mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-0 items-center shadow-lg rounded-lg overflow-hidden">
+                {/* Left Side Image - Image on the LEFT */}
+                <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                    className="order-1 h-80 md:h-96"
+                >
+                    {/* Image container with fixed height */}
+                    <div className="h-full w-full flex items-center justify-center p-4">
+                        <motion.img
+                            src={reapplication_Image}
+                            alt="Reapplication"
+                            className="max-h-full max-w-full object-contain"
+                            whileHover={{ scale: 1.02 }}
+                            transition={{ duration: 0.3 }}
+                        />
                     </div>
-                    <div className="absolute bottom-6 left-6 flex -space-x-3">
-                        {[1, 2, 3].map(i => (
-                            <div key={i} className="w-10 h-10 rounded-full bg-gray-300 border-2 border-white"></div>
-                        ))}
-                    </div>
-                </div>
-                <div className="w-full md:w-1/2">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">Rejections, Reviews & <br /> Reapplications.</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">
-                        Our professional and legal experts review your
-                        records, appeals and administrative support that
-                        measure the risks for complex complicated
-                        travelers and data-driven users.
+                </motion.div>
+
+                {/* Right Side Text - Text on the RIGHT */}
+                <div className="order-2 p-8">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">Rejections, Reviews &<br /> Reapplications.</h3>
+                    <p className="text-gray-500 leading-relaxed text-sm">
+                       Get professional and legal experts to handle your reviews, appeals and administrative analysis with feedback that helps you navigate complicated situations and think like an expert.
                     </p>
                 </div>
             </div>
@@ -86,5 +78,6 @@ const Evaluate = () => {
     );
 };
 import { FaShieldAlt } from 'react-icons/fa';
+import Trend from '../assets/Trend';
 
 export default Evaluate;
