@@ -21,7 +21,7 @@ const CombinedFooter = () => {
     return (
         <>
             {/* Earn Section Portion */}
-            <section className="pt-24 pb-32 bg-white relative z-10">
+            <section className="pt-24 bg-white relative z-10">
                 <div className="text-center mb-20">
                     <h2 className="text-5xl font-bold text-gray-900 mb-2">Earn</h2>
                     <p className="text-gray-400 text-sm sentence tracking-wide font-medium">A smart way to turn your passion into profits</p>
@@ -75,7 +75,7 @@ const CombinedFooter = () => {
             </section>
 
             {/* Footer / Transparency Section */}
-            <div className="relative bg-[#050505] text-white pt-64 pb-16 overflow-hidden -mt-10">
+            <div className="relative bg-[#050505] text-white pt-64 pb-16 overflow-hidden -mt-20">
                 {/* Top Wave (Flipped) masking the transition */}
                 <div className="absolute top-0 left-0 w-full">
                     <svg viewBox="0 0 1440 320" className="w-full h-auto block rotate-180 text-white fill-current">
@@ -91,14 +91,26 @@ const CombinedFooter = () => {
                     {/* Feature Grid with Hover Glow */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-32 max-w-6xl mx-auto">
                         {gridItems.map((item, idx) => (
-                            <div key={idx} className="group relative bg-[#0F0F10] border border-white/5 p-8 rounded-2xl text-left transition-all duration-300 hover:border-brand-blue/30 overflow-hidden">
-                                {/* Hover Gradient Splash */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+                            <div key={idx} className="group relative bg-[#0F0F10] border border-white/5 p-8 rounded-2xl text-left transition-all duration-300 hover:border-brand-blue/30 overflow-hidden hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]">
+                                {/* Enhanced Splash Gradient - Multi-layer effect */}
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                                    {/* Base gradient */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/20 via-transparent to-purple-500/10"></div>
+                                    {/* Radial splash burst from center */}
+                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-blue/30 via-transparent to-transparent transform scale-0 group-hover:scale-150 transition-transform duration-500 ease-out"></div>
+                                    {/* Subtle shimmer effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-r(from-transparent via-brand-blue/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+                                </div>
+
+                                {/* Border glow on hover */}
+                                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 p-[1px]">
+                                    <div className="h-full w-full rounded-2xl bg-gradient-to-r from-brand-blue/50 via-brand-blue/20 to-brand-blue/50"></div>
+                                </div>
 
                                 <div className="relative z-10">
-                                    <div className="text-3xl mb-5 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">{item.icon}</div>
+                                    <div className="text-3xl mb-5 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 transform group-hover:rotate-3">{item.icon}</div>
                                     <h3 className="font-bold text-xl mb-3 text-gray-100 group-hover:text-brand-blue transition-colors">{item.title}</h3>
-                                    <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                                    <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-400 transition-colors">{item.desc}</p>
                                 </div>
                             </div>
                         ))}
@@ -115,9 +127,9 @@ const CombinedFooter = () => {
                         </h2>
                         <p className="text-blue-200/60 mb-10 max-w-lg mx-auto">You'll be assigned a number in order that founders access when we open the doors.</p>
 
-                        <a href="#join" className="inline-block px-12 py-5 bg-white text-black rounded-full font-bold text-lg hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                        <button href="#join" className="cursor-pointer inline-block px-12 py-5 bg-white text-black rounded-full font-bold text-lg hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]">
                             Join waitlist
-                        </a>
+                        </button>
                     </div>
 
                     <div className="border-t border-white/5 mt-20 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
