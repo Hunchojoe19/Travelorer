@@ -37,11 +37,18 @@ const ProcessSection = () => {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
                     {steps.map((step, idx) => (
-                        <div key={idx} className="flex flex-col items-center group cursor-pointer">
-                            <div className={`w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-3xl ${step.color} mb-6 transition-transform group-hover:scale-110 shadow-sm border border-blue-100`}>
-                                {step.icon}
+                        <div key={idx} className="relative group">
+                            <div className="flex flex-col items-center group cursor-pointer">
+                                <div className={`w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-3xl ${step.color} mb-6 transition-transform group-hover:scale-110 shadow-sm border border-blue-100`}>
+                                    {step.icon}
+                                </div>
+                                <h3 className="font-bold text-[#0276FE] text-sm">{step.label}</h3>
                             </div>
-                            <h3 className="font-bold text-[#0276FE] text-sm">{step.label}</h3>
+
+                            {/* splash ring outside the card */}
+                            <div className="absolute -inset-2 rounded-xl pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                <div className="w-full h-full rounded-xl ring-8 ring-[#0276FE]/20"></div>
+                            </div>
                         </div>
                     ))}
                 </div>

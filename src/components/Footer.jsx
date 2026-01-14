@@ -18,10 +18,10 @@ const CombinedFooter = () => {
     const gridItems = [
         { icon: <img src={Crowd} alt="Crowd Intelligence" className="w-9 h-9" />, title: "Crowd Intelligence", desc: `Real travelers reporting real wait times. Get validated, up-to-the-minute information from people at the airport right now.` },
         { icon: <img src={Analytics} alt={"Immigration Analytics"} className="w-9 h-9" />, title: "Immigration Analytics", desc: "Access detailed analytics, predictions, and personalized recommendations through our platform." },
-        { icon: <img src={Predictions} alt={"Intelligent Queue Predictions"} className="w-9 h-9" />, title: "Intelligent Queue Predictions", desc: "AI-driven success probability." },
-        { icon: <img src={Calculator} alt={"Affordable Pricing Calculator"} className="w-9 h-9" />, title: "Affordable Pricing Calculator", desc: "Smart tools to fit your budget." },
-        { icon: <img src={Brain} alt={"Smart Wait Time Intelligence"} className="w-9 h-9" />, title: "Smart Wait Time Intelligence", desc: "Up-to-the-minute travel alerts." },
-        { icon: <img src={Twemoji} alt={"Geo-Aware Architecture"} className="w-9 h-9" />, title: "Geo-Aware Architecture", desc: "Ready-made itineraries." },
+        { icon: <img src={Predictions} alt={"Intelligent Queue Predictions"} className="w-9 h-9" />, title: "Intelligent Queue Predictions", desc: "Algorithm-powered wait time estimates for check-in, security, and immigration based on historical patterns and current conditions." },
+        { icon: <img src={Calculator} alt={"Affordable Pricing Calculator"} className="w-9 h-9" />, title: "Affordable Pricing Calculator", desc: "SWith no gimmicks, no hidden fees and complete transparency, tailor requests using affordable on-demand services ." },
+        { icon: <img src={Brain} alt={"Smart Wait Time Intelligence"} className="w-9 h-9" />, title: "Smart Wait Time Intelligence", desc: "Algorithm-powered wait time estimates for check-in, security, and immigration based on historical patterns and current conditions." },
+        { icon: <img src={Twemoji} alt={"Geo-Aware Architecture"} className="w-9 h-9" />, title: "Geo-Aware Architecture", desc: "Detailed navigation layouts, walking distance, embassy locations and connection guidance for easy navigation." },
     ];
 
     return (
@@ -100,13 +100,13 @@ const CombinedFooter = () => {
                             <div key={idx} className="group relative bg-black border border-white/20 hover:border-[#0276FE] p-8 rounded-2xl text-left transition-all duration-300 overflow-hidden hover:shadow-[0_0_30px_rgba(2,118,254,0.3)]">
                                 {/* Enhanced Splash Gradient - Multi-layer effect */}
                                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                                 
+                        
                                     <div className="absolute inset-0 bg-gradient-to-r(from-transparent via-[#0276FE]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
                                 </div>
 
                                 <div className="relative z-10">
                                     <div className="text-3xl mb-5 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 transform group-hover:rotate-3">{item.icon}</div>
-                                    <h3 className="font-bold text-xl mb-3 text-gray-100 group-hover:text-[#0276FE] transition-colors">{item.title}</h3>
+                                    <h3 className="font-bold text-xl mb-3 text-gray-100 transition-colors">{item.title}</h3>
                                     <p className="text-[#EAEAF080] text-sm leading-relaxed group-hover:text-gray-400 transition-colors">{item.desc}</p>
                                 </div>
                             </div>
