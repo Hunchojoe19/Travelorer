@@ -1,21 +1,27 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaFingerprint, FaChartLine, FaRobot, FaMobileAlt, FaComments } from 'react-icons/fa';
+import { FaChartLine, FaRobot, FaMobileAlt, FaComments } from 'react-icons/fa';
+import Brain from '../assets/Brain.svg';
+import Crowd from '../assets/Crows-intelligence.svg';
+import Calculator from '../assets/Calculator.svg';
+import Analytics from '../assets/streamline-analytics.svg';
+import Predictions from '../assets/Predictions.svg';
+import Twemoji from '../assets/twemoji_world-map.svg';
 
 /**
  * Merging Earn content visually with Footer to achieve the overlap effect perfectly.
  */
 const CombinedFooter = () => {
-    const evaluate_Image = "https://res.cloudinary.com/dc59hhvse/image/upload/v1768155133/Evaluate_Predict_g1s5tw.png"
+    const evaluate_Image = "https://res.cloudinary.com/dc59hhvse/image/upload/v1768401091/Earn_gkq4zs.png"
 
     // Feature grid items
     const gridItems = [
-        { icon: <FaFingerprint className="text-pink-500" />, title: "Fraud Defense", desc: "Protect your data with advanced encryption." },
-        { icon: <FaChartLine className="text-green-500" />, title: "Growth Credits", desc: "Earn rewards as you travel more." },
-        { icon: <FaRobot className="text-blue-500" />, title: "Intelligent Score", desc: "AI-driven success probability." },
-        { icon: <FaMobileAlt className="text-blue-400" />, title: "Affordable Pricing", desc: "Smart tools to fit your budget." },
-        { icon: <FaComments className="text-red-400" />, title: "Real-Time Intel", desc: "Up-to-the-minute travel alerts." },
-        { icon: <FaChartLine className="text-cyan-400" />, title: "Pre-Built Portfolio", desc: "Ready-made itineraries." },
+        { icon: <img src={Crowd} alt="Crowd Intelligence" className="w-9 h-9" />, title: "Crowd Intelligence", desc: `Real travelers reporting real wait times. Get validated, up-to-the-minute information from people at the airport right now.` },
+        { icon: <img src={Analytics} alt={"Immigration Analytics"} className="w-9 h-9" />, title: "Immigration Analytics", desc: "Access detailed analytics, predictions, and personalized recommendations through our platform." },
+        { icon: <img src={Predictions} alt={"Intelligent Queue Predictions"} className="w-9 h-9" />, title: "Intelligent Queue Predictions", desc: "AI-driven success probability." },
+        { icon: <img src={Calculator} alt={"Affordable Pricing Calculator"} className="w-9 h-9" />, title: "Affordable Pricing Calculator", desc: "Smart tools to fit your budget." },
+        { icon: <img src={Brain} alt={"Smart Wait Time Intelligence"} className="w-9 h-9" />, title: "Smart Wait Time Intelligence", desc: "Up-to-the-minute travel alerts." },
+        { icon: <img src={Twemoji} alt={"Geo-Aware Architecture"} className="w-9 h-9" />, title: "Geo-Aware Architecture", desc: "Ready-made itineraries." },
     ];
 
     return (
@@ -91,26 +97,17 @@ const CombinedFooter = () => {
                     {/* Feature Grid with Hover Glow */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-32 max-w-6xl mx-auto">
                         {gridItems.map((item, idx) => (
-                            <div key={idx} className="group relative bg-[#0F0F10] border border-white/5 p-8 rounded-2xl text-left transition-all duration-300 hover:border-brand-blue/30 overflow-hidden hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]">
+                            <div key={idx} className="group relative bg-black border border-white/20 hover:border-[#0276FE] p-8 rounded-2xl text-left transition-all duration-300 overflow-hidden hover:shadow-[0_0_30px_rgba(2,118,254,0.3)]">
                                 {/* Enhanced Splash Gradient - Multi-layer effect */}
                                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                                    {/* Base gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/20 via-transparent to-purple-500/10"></div>
-                                    {/* Radial splash burst from center */}
-                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-blue/30 via-transparent to-transparent transform scale-0 group-hover:scale-150 transition-transform duration-500 ease-out"></div>
-                                    {/* Subtle shimmer effect */}
-                                    <div className="absolute inset-0 bg-gradient-to-r(from-transparent via-brand-blue/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
-                                </div>
-
-                                {/* Border glow on hover */}
-                                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 p-[1px]">
-                                    <div className="h-full w-full rounded-2xl bg-gradient-to-r from-brand-blue/50 via-brand-blue/20 to-brand-blue/50"></div>
+                                 
+                                    <div className="absolute inset-0 bg-gradient-to-r(from-transparent via-[#0276FE]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
                                 </div>
 
                                 <div className="relative z-10">
                                     <div className="text-3xl mb-5 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 transform group-hover:rotate-3">{item.icon}</div>
-                                    <h3 className="font-bold text-xl mb-3 text-gray-100 group-hover:text-brand-blue transition-colors">{item.title}</h3>
-                                    <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-400 transition-colors">{item.desc}</p>
+                                    <h3 className="font-bold text-xl mb-3 text-gray-100 group-hover:text-[#0276FE] transition-colors">{item.title}</h3>
+                                    <p className="text-[#EAEAF080] text-sm leading-relaxed group-hover:text-gray-400 transition-colors">{item.desc}</p>
                                 </div>
                             </div>
                         ))}

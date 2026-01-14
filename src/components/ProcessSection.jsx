@@ -1,13 +1,16 @@
 import React from 'react';
-import { FaGlobeAmericas, FaWifi, FaUserShield, FaCheckCircle, FaRobot } from 'react-icons/fa';
+import { FaGlobeAmericas, FaCheckCircle, FaUserShield } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
+import GroupPeople from '../assets/Group_People.svg';
+import SafeGuard from '../assets/SafeGuard.svg';
+import Instant from '../assets/Instant.svg';
 
 const ProcessSection = () => {
     const steps = [
         { icon: <FaGlobeAmericas />, label: "Anytime, Anywhere", color: "text-blue-500" },
-        { icon: <FaWifi />, label: "Real-time Intelligence", color: "text-indigo-500" },
-        { icon: <FaUserShield />, label: "Data Privacy", color: "text-cyan-500" },
-        { icon: <FaCheckCircle />, label: "Full Transparency", color: "text-sky-500" },
+        { icon: <img src={GroupPeople} alt="Real-time Intelligence" className="w-7 h-7" />, label: "Real-time Intelligence", color: "text-indigo-500" },
+        { icon: <img src={Instant} alt="Instant & Intuitive" className="w-7 h-7" />, label: "Instant, Intuitive", color: "text-cyan-500" },
+        { icon: <img src={SafeGuard} alt="Safe & Secure" className="w-7 h-7" />, label: "Safe, Secure", color: "text-sky-500" },
     ];
 
     return (
@@ -38,7 +41,7 @@ const ProcessSection = () => {
                             <div className={`w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-3xl ${step.color} mb-6 transition-transform group-hover:scale-110 shadow-sm border border-blue-100`}>
                                 {step.icon}
                             </div>
-                            <h3 className="font-bold text-gray-800 text-sm">{step.label}</h3>
+                            <h3 className="font-bold text-[#0276FE] text-sm">{step.label}</h3>
                         </div>
                     ))}
                 </div>

@@ -22,7 +22,7 @@ const Discover = () => {
                 <p className="text-gray-400 mt-2">A Simple way to build your strategy faster</p>
             </motion.div>
 
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-32">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-8">
 
                 {/* Feature 1: Plan your trip */}
                 <div className="flex flex-col md:flex-row items-center gap-12">
@@ -70,16 +70,7 @@ const Discover = () => {
                                 whileHover={{ scale: 1.03 }}
                                 transition={{ duration: 0.3 }}
                             />
-                            <motion.div
-                                className="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-gray-100 w-48"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
-                            >
-                                <div className="h-2 w-20 bg-gray-200 rounded mb-2"></div>
-                                <div className="h-2 w-32 bg-gray-100 rounded"></div>
-                            </motion.div>
+                    
                         </motion.div>
                     </motion.div>
                 </div>
@@ -128,16 +119,7 @@ const Discover = () => {
                                 whileHover={{ scale: 1.03 }}
                                 transition={{ duration: 0.3 }}
                             />
-                            <motion.div
-                                className="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-gray-100 w-48"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
-                            >
-                                <div className="h-2 w-20 bg-gray-200 rounded mb-2"></div>
-                                <div className="h-2 w-32 bg-gray-100 rounded"></div>
-                            </motion.div>
+                            
                         </motion.div>
                     </motion.div>
                 </div>
@@ -183,16 +165,7 @@ const Discover = () => {
                                 whileHover={{ scale: 1.03 }}
                                 transition={{ duration: 0.3 }}
                             />
-                            <motion.div
-                                className="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-gray-100 w-48"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
-                            >
-                                <div className="h-2 w-20 bg-gray-200 rounded mb-2"></div>
-                                <div className="h-2 w-32 bg-gray-100 rounded"></div>
-                            </motion.div>
+                            
                         </motion.div>
                     </motion.div>
                     {/* <motion.div

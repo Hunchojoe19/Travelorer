@@ -4,7 +4,11 @@ import { FaPlay } from 'react-icons/fa';
 
 const Hero = () => {
     return (
-        <div className="relative pt-32 pb-20 overflow-hidden bg-hero-gradient">
+        <div
+            className="relative pt-32 pb-20 overflow-hidden bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('https://res.cloudinary.com/dc59hhvse/image/upload/v1768401091/685cc40648a523c6ae809c7e_bg-hero_nmuu2k.png')" }}
+        >
+            <div className="absolute inset-0 pointer-events-none"></div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-12 lg:gap-20 relative z-10">
 
                 {/* Left Content - Centered */}
@@ -14,14 +18,13 @@ const Hero = () => {
                     transition={{ duration: 0.6 }}
                     className="flex-1 max-w-xl text-left"
                 >
-                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
                         The Smart Way To <br />
                         Get Your Travel Visa
                     </h1>
 
-                    <p className="text-white/90 text-lg md:text-xl mb-10">
-                        Travel smarter. No application reviews, just the info you need. Guaranteed,
-                        fast and secure way to travel needs.
+                    <p className="text-black text-lg font-light mb-10">
+                        Tourain simplifies the application process by assisting you with the information, preparation and resources you need to navigate easily.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -32,10 +35,10 @@ const Hero = () => {
                             Join the waitlist
                         </button>
                         <button className="flex items-center gap-3 px-6 py-4 text-gray-800 font-medium hover:text-black transition-colors">
-                            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
-                                <FaPlay className="ml-1 w-3 h-3 text-gray-900" />
+                            <div className="w-10 h-10 bg-[#000000] rounded-full flex items-center justify-center shadow-md">
+                                <FaPlay className="ml-1 w-3 h-3 text-[#7CB8FE]" />
                             </div>
-                            See How
+                            Play video
                         </button>
                     </div>
                 </motion.div>
