@@ -45,9 +45,18 @@ const ProcessSection = () => {
                                 <h3 className="font-bold text-[#0276FE] text-sm">{step.label}</h3>
                             </div>
 
-                            {/* splash ring outside the card */}
+                            {/* splash underneath the card (behind) */}
+                            <div className="absolute inset-0 -z-10 flex items-end justify-center pointer-events-none">
+                                {/* blurred radial splash */}
+                                <div className="w-44 md:w-52 h-10 md:h-12 rounded-full bg-[#0276FE]/20 blur-3xl opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:-translate-y-1" />
+
+                                {/* subtle spark element */}
+                                <div className="absolute -right-2 -top-3 w-3 h-3 bg-[#0276FE] rounded-full opacity-0 scale-75 transition-all duration-500 group-hover:opacity-100 group-hover:scale-110 animate-pulse" />
+                            </div>
+
+                            {/* faint outer ring for structure (still outside) */}
                             <div className="absolute -inset-2 rounded-xl pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                <div className="w-full h-full rounded-xl ring-8 ring-[#0276FE]/20"></div>
+                                <div className="w-full h-full rounded-xl ring-8 ring-[#0276FE]/10"></div>
                             </div>
                         </div>
                     ))}
