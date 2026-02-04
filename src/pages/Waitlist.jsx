@@ -2,9 +2,13 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase';
 import Navbar from '../components/Navbar';
-import CombinedFooter from '../components/Footer';
+import SuccessModal from '../components/SuccessModal';
 import countryList from 'react-select-country-list';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 const Waitlist = () => {
     const navigate = useNavigate();
@@ -15,6 +19,8 @@ const Waitlist = () => {
         phoneNumber: '',
         nationality: ''
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     // Get the list of all countries
     const countries = useMemo(() => countryList().getData(), []);
@@ -29,16 +35,44 @@ const Waitlist = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
 
-        // Here you can add your API call to save the waitlist data
-        console.log('Waitlist form submitted:', formData);
+        try {
+            // Save to Firestore
+            await addDoc(collection(db, 'waitlist'), {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                phoneNumber: formData.phoneNumber,
+                nationality: formData.nationality,
+                createdAt: serverTimestamp()
+            });
 
-        toast.success('Successfully joined the waitlist!');
+            // Show success modal
+            setShowSuccessModal(true);
 
-        // Optionally navigate back to home or show a success message
+            // Reset form
+            setFormData({
+                firstName: '',
+                lastName: '',
+                email: '',
+                phoneNumber: '',
+                nationality: ''
+            });
+        } catch (error) {
+            console.error('Error saving to waitlist:', error);
+            toast.error('Failed to join waitlist. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setShowSuccessModal(false);
+        // Optionally navigate to home after closing modal
         setTimeout(() => {
             navigate('/');
-        }, 2000);
+        }, 500);
     };
 
     // Typewriter text
@@ -60,16 +94,37 @@ const Waitlist = () => {
             <div className="relative z-10 w-full flex flex-1 items-center justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Main Container - Flex Row on Desktop */}
-                <div className="flex flex-col lg:flex-row items-center lg:items-start g
-                ap-8 lg:gap-16 w-full my-20 lg:my-0">
+                <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-16 w-full my-20 lg:my-0">
 
                     {/* Header Text - Animating from the left */}
                     <motion.div
                         initial={{ opacity: 0, x: -200 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="flex-1 text-center lg:text-left lg:max-w-md py-12"
+                        className="flex-1 text-center lg:text-left lg:max-w-md py-12 relative"
                     >
+                        {/* Animated Plane flying in a circular path */}
+                        <motion.div
+                            className="absolute text-4xl z-10"
+                            animate={{
+                                x: [0, 120, 120, 0, 0],
+                                y: [0, 0, 100, 100, 0],
+                                rotate: [0, 90, 180, 270, 360]
+                            }}
+                            transition={{
+                                duration: 8,
+                                repeat: Infinity,
+                                ease: "linear"
+                            }}
+                            style={{
+                                top: '-30px',
+                                left: '50%',
+                                marginLeft: '-20px'
+                            }}
+                        >
+                            ✈️
+                        </motion.div>
+
                         <h1 className="text-7xl md:text-[96px] font-bold text-white mb-4 lg:mb-6">
                             JOIN THE WAITLIST
                         </h1>
@@ -115,6 +170,7 @@ const Waitlist = () => {
                                     onChange={handleChange}
                                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none transition-all"
                                     required
+                                    disabled={isSubmitting}
                                 />
                             </motion.div>
 
@@ -134,6 +190,7 @@ const Waitlist = () => {
                                     onChange={handleChange}
                                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none transition-all"
                                     required
+                                    disabled={isSubmitting}
                                 />
                             </motion.div>
 
@@ -153,6 +210,7 @@ const Waitlist = () => {
                                     onChange={handleChange}
                                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none transition-all"
                                     required
+                                    disabled={isSubmitting}
                                 />
                             </motion.div>
 
@@ -165,12 +223,13 @@ const Waitlist = () => {
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Phone Number*
                                 </label>
-                                <input
-                                    type="tel"
-                                    name="phoneNumber"
+                                <PhoneInput
+                                    international
+                                    defaultCountry="US"
                                     value={formData.phoneNumber}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none transition-all"
+                                    onChange={(value) => setFormData(prev => ({ ...prev, phoneNumber: value || '' }))}
+                                    className="phone-input-custom"
+                                    disabled={isSubmitting}
                                     required
                                 />
                             </motion.div>
@@ -190,6 +249,7 @@ const Waitlist = () => {
                                     onChange={handleChange}
                                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none transition-all bg-white"
                                     required
+                                    disabled={isSubmitting}
                                 >
                                     <option value="">Select your nationality</option>
                                     {countries.map((country) => (
@@ -206,17 +266,29 @@ const Waitlist = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 1, duration: 0.5 }}
                                 type="submit"
-                                className="w-[180px] flex justify-self-center justify-center items-center mt-8 px-4 py-3 bg-black text-white rounded-full font-semibold hover:bg-gray-900 transition-all hover:scale-105 shadow-xl"
+                                disabled={isSubmitting}
+                                className="w-[180px] flex justify-self-center justify-center items-center mt-8 px-4 py-3 bg-black text-white rounded-full font-semibold hover:bg-gray-900 transition-all hover:scale-105 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                             >
-                                Join waitlist
+                                {isSubmitting ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        <span>Joining...</span>
+                                    </div>
+                                ) : (
+                                    'Join waitlist'
+                                )}
                             </motion.button>
                         </form>
                     </motion.div>
                 </div>
             </div>
 
-            {/* Footer */}
-            {/* <CombinedFooter /> */}
+            {/* Success Modal */}
+            <SuccessModal
+                isOpen={showSuccessModal}
+                onClose={handleCloseModal}
+                userEmail={formData.email}
+            />
         </div>
     );
 };

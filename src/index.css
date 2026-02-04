@@ -9,3 +9,35 @@ body {
   background-color: #f8fafc;
   color: #0f172a;
 }
+
+/* Custom styles for react-phone-number-input */
+.phone-input-custom .PhoneInputInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.phone-input-custom .PhoneInputInput:focus {
+  border-color: #003B95;
+  box-shadow: 0 0 0 3px rgba(0, 59, 149, 0.1);
+}
+
+.phone-input-custom .PhoneInputCountry {
+  margin-right: 0.5rem;
+}
+
+.phone-input-custom .PhoneInputCountrySelect {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.phone-input-custom .PhoneInputCountrySelect:focus {
+  border-color: #003B95;
+}
