@@ -1,12 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaChartLine, FaRobot, FaMobileAlt, FaComments } from 'react-icons/fa';
+import { FaInstagram, FaTiktok } from 'react-icons/fa';
+import { FaXTwitter } from "react-icons/fa6";
 import Brain from '../assets/Brain.svg';
 import Crowd from '../assets/Crows-intelligence.svg';
 import Calculator from '../assets/Calculator.svg';
 import Analytics from '../assets/streamline-analytics.svg';
 import Predictions from '../assets/Predictions.svg';
 import Twemoji from '../assets/twemoji_world-map.svg';
+import { GoMail } from "react-icons/go";
+import { MdLocalPhone } from "react-icons/md";
 
 /**
  * Merging Earn content visually with Footer to achieve the overlap effect perfectly.
@@ -59,24 +62,25 @@ const CombinedFooter = () => {
                        
                         <div className="absolute top-1/2 left-1/2 w-full h-full bg-blue-400 rounded-full filter blur-[100px] opacity-20 -translate-x-1/2 -translate-y-1/2 -z-10"></div>
                     </div> */}
-                      <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="order-1 md:order-2 h-80 md:h-96"
-                >
-                    {/* Image container with fixed height */}
-                    <div className="h-full w-full flex items-center justify-center p-4">
-                        <motion.img
-                            src={evaluate_Image}
-                            alt="Planning App UI"
-                            className="max-h-full max-w-full object-contain"
-                            whileHover={{ scale: 1.02 }}
-                            transition={{ duration: 0.3 }}
-                        />
-                    </div>
-                </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, x: 50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        className="order-1 md:order-2 h-80 md:h-96"
+                    >
+                        {/* Image container with fixed height */}
+                        <div className="h-full w-full flex items-center justify-center p-4">
+                            <motion.img
+                                src={evaluate_Image}
+                                alt="Planning App UI"
+                                className="max-h-full max-w-full object-contain"
+                                whileHover={{ scale: 1.02 }}
+                                transition={{ duration: 0.3 }}
+                                loading='lazy'
+                            />
+                        </div>
+                    </motion.div>
                 </div>
             </section>
 
@@ -100,7 +104,7 @@ const CombinedFooter = () => {
                             <div key={idx} className="group relative bg-black border border-white/20 hover:border-[#0276FE] p-8 rounded-2xl text-left transition-all duration-300 overflow-hidden hover:shadow-[0_0_30px_rgba(2,118,254,0.3)]">
                                 {/* Enhanced Splash Gradient - Multi-layer effect */}
                                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                        
+
                                     <div className="absolute inset-0 bg-gradient-to-r(from-transparent via-[#0276FE]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
                                 </div>
 
@@ -124,17 +128,29 @@ const CombinedFooter = () => {
                         </h2>
                         <p className="text-blue-200/60 mb-10 max-w-lg mx-auto">You'll be assigned a number in order that founders access when we open the doors.</p>
 
-                        <button href="#join" className="cursor-pointer inline-block px-12 py-5 bg-white text-black rounded-full font-bold text-lg hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                        <button href="#join" className="cursor-pointer inline-block px-12 py-5 bg-[#000000] text-white rounded-full font-bold text-lg hover:bg-gray-400 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]">
                             Join waitlist
                         </button>
                     </div>
 
-                    <div className="border-t border-white/5 mt-20 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
+                    <div className="border-t border-white/5 mt-20 pt-8 flex flex-col gap-y-4 md:flex-row justify-between items-center text-gray-500 text-sm">
                         <p>Tourain Inc © 2026</p>
+                        <div className='space-y-4'>
+                            <div className='flex items-center gap-x-2 cursor-pointer hover:text-white transition-colors'>
+
+                                <GoMail className='w-[24px] h-[24px]' />
+                                <p>hello@tourain.com</p>
+                            </div>
+                            <div className='flex items-center gap-x-2 cursor-pointer hover:text-white transition-colors'>
+
+                                <MdLocalPhone className='w-[24px] h-[24px]' />
+                                <p>+234 818 388 8719</p>
+                            </div>
+                        </div>
                         <div className="flex gap-6 mt-4 md:mt-0">
-                            <a href="#" className="hover:text-white transition-colors">Instagram</a>
-                            <a href="#" className="hover:text-white transition-colors">Twitter</a>
-                            <a href="#" className="hover:text-white transition-colors">TikTok</a>
+                            <a href="#" className="hover:text-white transition-colors"><FaInstagram className='w-[24px] h-[24px]' /></a>
+                            <a href="#" className="hover:text-white transition-colors"><FaXTwitter className='w-[24px] h-[24px] ' /></a>
+                            <a href="#" className="hover:text-white transition-colors"><FaTiktok className='w-[24px] h-[24px] ' /></a>
                         </div>
                     </div>
                 </div>

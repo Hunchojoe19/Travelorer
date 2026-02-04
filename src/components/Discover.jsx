@@ -15,8 +15,8 @@ const Discover = () => {
             >
                 <div className='w-full flex flex-col items-center gap-2'>
 
-                <span className="text-gray-400 sentence tracking-widest text-base font-semibold">How it works</span>
-                <div className='w-8 h-0.5 bg-black text-center'/>
+                    <span className="text-gray-400 sentence tracking-widest text-base font-semibold">How it works</span>
+                    <div className='w-8 h-0.5 bg-black text-center' />
                 </div>
                 <h2 className="text-4xl md:text-5xl font-bold mt-4 text-gray-900">Discover</h2>
                 <p className="text-gray-400 mt-2">A Simple way to build your strategy faster</p>
@@ -47,7 +47,7 @@ const Discover = () => {
                             Use our app for automated visa results, you
                             can check anywhere in real-time. */}
                             Save hours of research and huge consulting fees.
-                        Ask AI and explore conversations that answer your visa-related questions in real-time.
+                            Ask AI and explore conversations that answer your visa-related questions in real-time.
                         </motion.p>
                     </div>
                     <motion.div
@@ -69,8 +69,9 @@ const Discover = () => {
                                 className="rounded-2xl w-full h-auto object-cover"
                                 whileHover={{ scale: 1.03 }}
                                 transition={{ duration: 0.3 }}
+                                loading='lazy'
                             />
-                    
+
                         </motion.div>
                     </motion.div>
                 </div>
@@ -118,8 +119,9 @@ const Discover = () => {
                                 className="rounded-2xl w-full h-auto object-cover"
                                 whileHover={{ scale: 1.03 }}
                                 transition={{ duration: 0.3 }}
+                                loading='lazy'
                             />
-                            
+
                         </motion.div>
                     </motion.div>
                 </div>
@@ -164,8 +166,9 @@ const Discover = () => {
                                 className="rounded-2xl w-full h-auto object-cover"
                                 whileHover={{ scale: 1.03 }}
                                 transition={{ duration: 0.3 }}
+                                loading='lazy'
                             />
-                            
+
                         </motion.div>
                     </motion.div>
                     {/* <motion.div

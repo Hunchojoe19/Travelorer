@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaPlay } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
     return (
@@ -28,12 +29,12 @@ const Hero = () => {
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                        <button
-                            href="#waitlist"
+                        <Link
+                            to="/signup"
                             className="px-8 py-4 bg-black text-white rounded-full font-semibold hover:bg-gray-900 transition-transform hover:scale-105 shadow-xl"
                         >
                             Join the waitlist
-                        </button>
+                        </Link>
                         <button className="flex items-center gap-3 px-6 py-4 text-gray-800 font-medium hover:text-black transition-colors">
                             <div className="w-10 h-10 bg-[#000000] rounded-full flex items-center justify-center shadow-md">
                                 <FaPlay className="ml-1 w-3 h-3 text-[#7CB8FE]" />
@@ -60,6 +61,7 @@ const Hero = () => {
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ duration: 0.6, delay: 0.4 }}
                             whileHover={{ scale: 1.02 }}
+                            loading='lazy'
                         />
                     </div>
                 </motion.div>
