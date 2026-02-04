@@ -34,7 +34,7 @@ const Navbar = ({ forceBlue = false, logoOnly = false }) => {
             return;
         }
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 600);
+            setIsScrolled(window.scrollY > 0);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);

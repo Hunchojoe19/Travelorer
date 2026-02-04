@@ -30,7 +30,7 @@ const Hero = () => {
 
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                         <Link
-                            to="/signup"
+                            to="/waitlist"
                             className="px-8 py-4 bg-black text-white rounded-full font-semibold hover:bg-gray-900 transition-transform hover:scale-105 shadow-xl"
                         >
                             Join the waitlist
