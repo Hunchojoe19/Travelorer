@@ -1,0 +1,18 @@
+import { ListVisaTypesData, CreateEligibilityAssessmentData, CreateEligibilityAssessmentVariables, GetVisaRequirementsForCountryAndNationalityData, GetVisaRequirementsForCountryAndNationalityVariables, UpdateEligibilityAssessmentData, UpdateEligibilityAssessmentVariables } from '../';
+import { UseDataConnectQueryResult, useDataConnectQueryOptions, UseDataConnectMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
+import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
+import { DataConnect } from 'firebase/data-connect';
+import { FirebaseError } from 'firebase/app';
+
+
+export function useListVisaTypes(options?: useDataConnectQueryOptions<ListVisaTypesData>): UseDataConnectQueryResult<ListVisaTypesData, undefined>;
+export function useListVisaTypes(dc: DataConnect, options?: useDataConnectQueryOptions<ListVisaTypesData>): UseDataConnectQueryResult<ListVisaTypesData, undefined>;
+
+export function useCreateEligibilityAssessment(options?: useDataConnectMutationOptions<CreateEligibilityAssessmentData, FirebaseError, CreateEligibilityAssessmentVariables>): UseDataConnectMutationResult<CreateEligibilityAssessmentData, CreateEligibilityAssessmentVariables>;
+export function useCreateEligibilityAssessment(dc: DataConnect, options?: useDataConnectMutationOptions<CreateEligibilityAssessmentData, FirebaseError, CreateEligibilityAssessmentVariables>): UseDataConnectMutationResult<CreateEligibilityAssessmentData, CreateEligibilityAssessmentVariables>;
+
+export function useGetVisaRequirementsForCountryAndNationality(vars: GetVisaRequirementsForCountryAndNationalityVariables, options?: useDataConnectQueryOptions<GetVisaRequirementsForCountryAndNationalityData>): UseDataConnectQueryResult<GetVisaRequirementsForCountryAndNationalityData, GetVisaRequirementsForCountryAndNationalityVariables>;
+export function useGetVisaRequirementsForCountryAndNationality(dc: DataConnect, vars: GetVisaRequirementsForCountryAndNationalityVariables, options?: useDataConnectQueryOptions<GetVisaRequirementsForCountryAndNationalityData>): UseDataConnectQueryResult<GetVisaRequirementsForCountryAndNationalityData, GetVisaRequirementsForCountryAndNationalityVariables>;
+
+export function useUpdateEligibilityAssessment(options?: useDataConnectMutationOptions<UpdateEligibilityAssessmentData, FirebaseError, UpdateEligibilityAssessmentVariables>): UseDataConnectMutationResult<UpdateEligibilityAssessmentData, UpdateEligibilityAssessmentVariables>;
+export function useUpdateEligibilityAssessment(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateEligibilityAssessmentData, FirebaseError, UpdateEligibilityAssessmentVariables>): UseDataConnectMutationResult<UpdateEligibilityAssessmentData, UpdateEligibilityAssessmentVariables>;

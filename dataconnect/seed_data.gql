@@ -1,0 +1,52 @@
+mutation SeedData @transaction @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public because it only inserts seed data.") {
+  country_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      createdAt: "2024-03-15T00:00:00Z",
+      currency: "USD",
+      isoCode: "US",
+      name: "United States",
+      officialLanguage: "English"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      createdAt: "2024-03-16T00:00:00Z",
+      currency: "CAD",
+      isoCode: "CA",
+      name: "Canada",
+      officialLanguage: "English, French"
+    }
+  ])
+  visaType_insertMany(data: [
+    {
+      id: "650e8400-e29b-41d4-a716-446655440000",
+      name: "Tourist Visa",
+      purpose: "Tourism",
+      description: "For tourists"
+    },
+    {
+      id: "650e8400-e29b-41d4-a716-446655440001",
+      name: "Student Visa",
+      purpose: "Education",
+      description: "For students"
+    }
+  ])
+  visaRequirement_insertMany(data: [
+    {
+      countryId: "550e8400-e29b-41d4-a716-446655440000",
+      visaTypeId: "650e8400-e29b-41d4-a716-446655440000",
+      documentList: ["Passport", "Photo"],
+      feeRange: "$160",
+      nationality: "All",
+      processingTime: "2 weeks"
+    },
+    {
+      countryId: "550e8400-e29b-41d4-a716-446655440001",
+      visaTypeId: "650e8400-e29b-41d4-a716-446655440001",
+      documentList: ["Acceptance Letter", "Passport"],
+      feeRange: "$150",
+      nationality: "All",
+      processingTime: "3 weeks"
+    }
+  ])
+}

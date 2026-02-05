@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { HiMenu, HiX } from 'react-icons/hi';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const NavLink = ({ href, children, isScrolled, forceBlue }) => {
+
     return (
         <a
             href={href}
@@ -23,6 +24,7 @@ const Navbar = ({ forceBlue = false, logoOnly = false }) => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(forceBlue);
+    const pathName = useLocation().pathname;
 
     useEffect(() => {
         if (logoOnly) {
@@ -58,11 +60,12 @@ const Navbar = ({ forceBlue = false, logoOnly = false }) => {
                     {/* Desktop Nav */}
                     {!logoOnly && (
                         <div className="hidden md:flex items-center space-x-8">
-                            <NavLink href="#why" isScrolled={isScrolled} forceBlue={forceBlue}>Why Tourain?</NavLink>
-                            <NavLink href="#features" isScrolled={isScrolled} forceBlue={forceBlue}>Features</NavLink>
-                            <Link to="/signup" className={`px-5 cursor-pointer py-2 rounded-full text-sm font-medium transition-colors ${forceBlue ? 'bg-white text-[#003B95] hover:bg-gray-100' : 'bg-black text-white hover:bg-gray-400'}`}>
-                                Join waitlist
-                            </Link>
+                            {pathName !== '/waitlist' && <NavLink href="#why" isScrolled={isScrolled} forceBlue={forceBlue}>Why Tourain?</NavLink>}
+                            {pathName !== '/waitlist' && <NavLink href="#features" isScrolled={isScrolled} forceBlue={forceBlue}>Features</NavLink>}
+                            {pathName === '/waitlist' && <NavLink href="/" isScrolled={isScrolled} forceBlue={forceBlue}>Home</NavLink>}
+                            {pathName !== '/waitlist' && <Link to="/waitlist" className={`px-5 cursor-pointer py-2 rounded-full text-sm font-medium transition-colors ${forceBlue ? 'bg-white text-[#003B95] hover:bg-gray-100' : 'bg-black text-white hover:bg-gray-400'}`}>
+                                Join the waitlist
+                            </Link>}
                         </div>
                     )}
 
@@ -84,9 +87,10 @@ const Navbar = ({ forceBlue = false, logoOnly = false }) => {
             {isOpen && !logoOnly && (
                 <div className={`md:hidden absolute top-full left-0 w-full shadow-lg border-b ${forceBlue ? 'bg-[#003B95] border-white/10' : 'bg-white/95 backdrop-blur-md border-gray-100'}`}>
                     <div className="px-4 pt-2 pb-6 space-y-2">
-                        <a href="#why" className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Why Tourain</a>
-                        <a href="#features" className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Features</a>
-                        <Link to="/signup" className={`block px-3 py-2 text-center rounded-full font-medium mt-4 ${forceBlue ? 'bg-white text-[#003B95]' : 'bg-black text-white'}`}> Join the waitlist</Link>
+                        {pathName !== '/waitlist' && <a href="#why" className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Why Tourain</a>}
+                        {pathName === '/waitlist' && <a href="/" className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Home</a>}
+                        {pathName !== '/waitlist' && <a href="#features" className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Features</a>}
+                        {pathName !== '/waitlist' && <Link to="/waitlist" className={`block px-3 py-2 text-center rounded-full font-medium mt-4 ${forceBlue ? 'bg-white text-[#003B95]' : 'bg-black text-white'}`}> Join the waitlist</Link>}
                     </div>
                 </div>
             )}
