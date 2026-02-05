@@ -1,15 +1,25 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlay } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const Hero = () => {
+    const words = ["Travel", "Study", "Tourist", "Work"];
+    const [index, setIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIndex((prevIndex) => (prevIndex + 1) % words.length);
+        }, 3000); // Change word every 3 seconds
+
+        return () => clearInterval(interval);
+    }, []);
     return (
         <div
             className="relative pt-32 pb-20 overflow-hidden bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: "url('https://res.cloudinary.com/dc59hhvse/image/upload/v1768401091/685cc40648a523c6ae809c7e_bg-hero_nmuu2k.png')" }}
         >
-            <div className="absolute inset-0 pointer-events-none"></div>
+            <div className="absolute inset-0 pointer-events-none bg-blue-600/20"></div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-12 lg:gap-20 relative z-10">
 
                 {/* Left Content - Centered */}
@@ -21,7 +31,27 @@ const Hero = () => {
                 >
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
                         The Smart Way To <br />
-                        Get Your Travel Visa
+                        Get Your{' '}
+                        <motion.span
+                            layout
+                            className="inline-flex relative h-[1.2em] overflow-hidden align-middle"
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                        >
+                            <span className="opacity-0 invisible whitespace-pre">{words[index]}</span>
+                            <AnimatePresence mode="wait">
+                                <motion.span
+                                    key={words[index]}
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    exit={{ y: -20, opacity: 0 }}
+                                    transition={{ duration: 0.3, ease: "easeOut" }}
+                                    className="absolute left-0 top-0 flex items-center"
+                                >
+                                    {words[index]}
+                                </motion.span>
+                            </AnimatePresence>
+                        </motion.span>{' '}
+                        Visa
                     </h1>
 
                     <p className="text-black text-lg font-light mb-10">

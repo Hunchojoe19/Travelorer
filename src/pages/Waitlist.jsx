@@ -36,10 +36,12 @@ const Waitlist = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+        console.log("Submitting form data:", formData);
 
         try {
+            console.log("Attempting to add doc to Firestore...");
             // Save to Firestore
-            await addDoc(collection(db, 'waitlist'), {
+            const docRef = await addDoc(collection(db, 'waitlist'), {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 email: formData.email,
@@ -47,6 +49,7 @@ const Waitlist = () => {
                 nationality: formData.nationality,
                 createdAt: serverTimestamp()
             });
+            console.log("Document written with ID: ", docRef.id);
 
             // Show success modal
             setShowSuccessModal(true);
@@ -61,8 +64,11 @@ const Waitlist = () => {
             });
         } catch (error) {
             console.error('Error saving to waitlist:', error);
-            toast.error('Failed to join waitlist. Please try again.');
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
+            toast.error(`Failed to join waitlist: ${error.message}`);
         } finally {
+            console.log("Finished submission process.");
             setIsSubmitting(false);
         }
     };
@@ -89,7 +95,7 @@ const Waitlist = () => {
             ></div>
 
             {/* Subtle Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#E6F0FF]/40 to-white/20 z-0"></div>
+            <div className="absolute inset-0 bg-blue-600/20 z-0"></div>
 
             <div className="relative z-10 w-full flex flex-1 items-center justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 

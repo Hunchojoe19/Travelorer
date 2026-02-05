@@ -1,0 +1,43 @@
+type User @table {
+  nationality: String!
+  createdAt: Timestamp!
+  displayName: String
+  email: String
+  dateOfBirth: Date
+}
+
+type Country @table {
+  name: String!
+  isoCode: String!
+  createdAt: Timestamp!
+  officialLanguage: String
+  currency: String
+}
+
+type VisaType @table {
+  name: String!
+  purpose: String!
+  description: String
+}
+
+type VisaRequirement @table {
+  country: Country!
+  visaType: VisaType!
+  nationality: String!
+  documentList: [String]!
+  processingTime: String!
+  feeRange: String!
+  notes: String
+  eligibilityCriteria: [String]
+}
+
+type EligibilityAssessment @table {
+  user: User!
+  country: Country!
+  visaType: VisaType!
+  nationality: String!
+  assessmentDate: Timestamp!
+  status: String!
+  notes: String
+  missingDocuments: [String]
+}

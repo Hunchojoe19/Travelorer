@@ -1,0 +1,59 @@
+query ListVisaTypes @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  visaTypes {
+    id
+    name
+    description
+    purpose
+  }
+}
+
+mutation CreateEligibilityAssessment(
+  $userId: UUID!
+  $countryId: UUID!
+  $visaTypeId: UUID!
+  $nationality: String!
+  $status: String!
+) @auth(level: USER) {
+  eligibilityAssessment_insert(
+    data: {
+      userId: $userId
+      countryId: $countryId
+      visaTypeId: $visaTypeId
+      nationality: $nationality
+      status: $status
+      assessmentDate_expr: "request.time"
+    }
+  )
+}
+
+query GetVisaRequirementsForCountryAndNationality(
+  $countryId: UUID!
+  $nationality: String!
+) @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  visaRequirements(
+    where: { countryId: { eq: $countryId }, nationality: { eq: $nationality } }
+  ) {
+    id
+    visaType {
+      id
+      name
+    }
+    documentList
+    eligibilityCriteria
+    feeRange
+    notes
+    processingTime
+  }
+}
+
+mutation UpdateEligibilityAssessment(
+  $id: UUID!
+  $status: String
+  $notes: String
+  $missingDocuments: [String!]
+) @auth(level: USER) {
+  eligibilityAssessment_update(
+    id: $id
+    data: { status: $status, notes: $notes, missingDocuments: $missingDocuments }
+  )
+}
