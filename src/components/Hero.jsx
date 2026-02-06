@@ -61,7 +61,7 @@ const Hero = () => {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                         <Link
                             to="/waitlist"
-                            className="px-8 py-4 bg-black text-white rounded-full font-semibold hover:bg-gray-900 transition-transform hover:scale-105 shadow-xl"
+                            className="px-8 py-4 bg-black text-white text-lg hover:bg-gray-400 shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded-full font-semibold transition-transform hover:scale-105"
                         >
                             Join the waitlist
                         </Link>
