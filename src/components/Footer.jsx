@@ -10,6 +10,7 @@ import Predictions from '../assets/Predictions.svg';
 import Twemoji from '../assets/twemoji_world-map.svg';
 import { GoMail } from "react-icons/go";
 import { MdLocalPhone } from "react-icons/md";
+import { Link } from 'react-router-dom';
 
 /**
  * Merging Earn content visually with Footer to achieve the overlap effect perfectly.
@@ -127,10 +128,11 @@ const CombinedFooter = () => {
                             We're getting everything <br /> ready for launch. <span className="text-[#FBBF24]">Join our <br /> waitlist for early access.</span>
                         </h2>
                         <p className="text-blue-200/60 mb-10 max-w-lg mx-auto">You'll be assigned a number in order that founders access when we open the doors.</p>
-
-                        <button href="#join" className="cursor-pointer inline-block px-12 py-5 bg-[#000000] text-white rounded-full font-bold text-lg hover:bg-gray-400 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                            Join waitlist
-                        </button>
+                        <Link to="/waitlist">
+                            <button className="cursor-pointer inline-block px-12 py-5 bg-[#000000] text-white rounded-full font-bold text-lg hover:bg-gray-400 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                                Join the waitlist
+                            </button>
+                        </Link>
                     </div>
 
                     <div className="border-t border-white/5 mt-20 pt-8 flex flex-col gap-y-4 md:flex-row justify-between items-center text-gray-500 text-sm">
