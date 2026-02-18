@@ -65,12 +65,12 @@ const Hero = () => {
                         >
                             Join the waitlist
                         </Link>
-                        <button className="flex items-center gap-3 px-6 py-4 text-gray-800 font-medium hover:text-black transition-colors">
+                        {/* <button className="flex items-center gap-3 px-6 py-4 text-gray-800 font-medium hover:text-black transition-colors">
                             <div className="w-10 h-10 bg-[#000000] rounded-full flex items-center justify-center shadow-md">
                                 <FaPlay className="ml-1 w-3 h-3 text-[#7CB8FE]" />
                             </div>
                             Play video
-                        </button>
+                        </button> */}
                     </div>
                 </motion.div>
 
