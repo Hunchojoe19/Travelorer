@@ -10,6 +10,7 @@ import countryList from 'react-select-country-list';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import { useMutation } from '@tanstack/react-query';
+import { registerWaitlist } from '../api/waitlistApi';
 
 const Waitlist = () => {
     const navigate = useNavigate();
@@ -29,20 +30,7 @@ const Waitlist = () => {
     // React Query Mutation payload:
     // { id: 0, first_name, last_name, email, phone, nationality }
     const waitlistMutation = useMutation({
-        mutationFn: async (newWaitlistEntry) => {
-            const response = await fetch('https://api.tourain.com/api/v1/register/waitlist', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newWaitlistEntry),
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to register on waitlist');
-            }
-            return response.json();
-        },
+        mutationFn: registerWaitlist,
     });
 
     const handleChange = (e) => {
