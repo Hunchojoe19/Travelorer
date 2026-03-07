@@ -23,5 +23,10 @@ export const registerWaitlist = async (newWaitlistEntry) => {
         throw new Error(errorMessage);
     }
 
-    return response.json();
+    try {
+        return await response.json();
+    } catch (e) {
+        // If response is a 201 or 200 without a JSON body, don't fail
+        return { success: true };
+    }
 };
