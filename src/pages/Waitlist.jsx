@@ -322,10 +322,10 @@ const Waitlist = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 1, duration: 0.5 }}
                                     type="submit"
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || waitlistMutation.isPending}
                                     className="w-[180px] flex justify-self-center justify-center items-center mt-8 px-4 py-3 bg-black text-white rounded-full font-semibold hover:bg-gray-900 transition-all hover:scale-105 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                                 >
-                                    {isSubmitting ? (
+                                    {(isSubmitting || waitlistMutation.isPending) ? (
                                         <div className="flex items-center gap-2">
                                             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                             {/* <span>Joining...</span> */}
