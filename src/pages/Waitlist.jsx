@@ -19,6 +19,9 @@ const Waitlist = () => {
         phoneNumber: '',
         nationality: ''
     });
+    const navigateHome = () => {
+        navigate('/');
+    }
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -86,10 +89,6 @@ const Waitlist = () => {
 
     const handleCloseModal = () => {
         setShowSuccessModal(false);
-        // Optionally navigate to home after closing modal
-        setTimeout(() => {
-            navigate('/');
-        }, 500);
     };
 
     // Typewriter text
@@ -190,6 +189,7 @@ const Waitlist = () => {
                                     <span className="font-semibold text-gray-800 break-all">{submittedEmail}</span> <br />
                                     for more updates.
                                 </p>
+                                <button onClick={navigateHome} className='w-28 h-10 rounded-full hover:bg-gray-400 bg-black text-white '>Home</button>
                             </motion.div>
                         ) : (
                             <form onSubmit={handleSubmit} className="space-y-5">
@@ -330,7 +330,7 @@ const Waitlist = () => {
             <SuccessModal
                 isOpen={showSuccessModal}
                 onClose={handleCloseModal}
-                userEmail={formData.email}
+                userEmail={submittedEmail}
             />
         </div>
     );
