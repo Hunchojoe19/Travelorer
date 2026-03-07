@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+// const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = import.meta.env.VITE_TEST_BASE_URL;
 export const registerWaitlist = async (newWaitlistEntry) => {
     // React Query itself acts as a state manager for async operations, 
     // but it still requires a fetching tool (like the native `fetch` or `axios`) 
