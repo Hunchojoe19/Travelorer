@@ -23,6 +23,10 @@ export const registerWaitlist = async (newWaitlistEntry) => {
         throw new Error(errorMessage);
     }
 
+    if (response.status === 201 || response.status === 204) {
+        return { success: true };
+    }
+
     try {
         return await response.json();
     } catch (e) {
