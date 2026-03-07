@@ -79,8 +79,9 @@ const Waitlist = () => {
                 console.warn('Could not save to Firestore, but API succeeded', fsError);
             }
 
-            // Show inline success card
+            // Show inline success card and modal
             setIsSuccess(true);
+            setShowSuccessModal(true);
             setSubmittedEmail(formData.email);
             setIsSubmitting(false);
 
@@ -323,7 +324,10 @@ const Waitlist = () => {
                                     transition={{ delay: 1, duration: 0.5 }}
                                     type="submit"
                                     disabled={isSubmitting || waitlistMutation.isPending}
-                                    className="w-[180px] flex justify-self-center justify-center items-center mt-8 px-4 py-3 bg-black text-white rounded-full font-semibold hover:bg-gray-900 transition-all hover:scale-105 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                                    className={`w-[180px] flex justify-self-center justify-center items-center mt-8 px-4 py-3 text-white rounded-full font-semibold transition-all shadow-xl ${(isSubmitting || waitlistMutation.isPending)
+                                            ? 'bg-gray-500 cursor-not-allowed opacity-70'
+                                            : 'bg-black hover:bg-gray-900 hover:scale-105'
+                                        }`}
                                 >
                                     {(isSubmitting || waitlistMutation.isPending) ? (
                                         <div className="flex items-center gap-2">
