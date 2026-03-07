@@ -61,8 +61,7 @@ const Waitlist = () => {
                 nationality: formData.nationality
             };
 
-            await waitlistMutation.mutateAsync(apiPayload);
-            console.log("API waitlist registration successful");
+            await waitlistMutation.mutateAsync(apiPayload).unwrap()
 
             // Save to Firestore as backward compatibility (optional but keeping to avoid breaking things)
             try {
@@ -325,8 +324,8 @@ const Waitlist = () => {
                                     type="submit"
                                     disabled={isSubmitting || waitlistMutation.isPending}
                                     className={`w-[180px] flex justify-self-center justify-center items-center mt-8 px-4 py-3 text-white rounded-full font-semibold transition-all shadow-xl ${(isSubmitting || waitlistMutation.isPending)
-                                            ? 'bg-gray-500 cursor-not-allowed opacity-70'
-                                            : 'bg-black hover:bg-gray-900 hover:scale-105'
+                                        ? 'bg-gray-500 cursor-not-allowed opacity-70'
+                                        : 'bg-black hover:bg-gray-900 hover:scale-105'
                                         }`}
                                 >
                                     {(isSubmitting || waitlistMutation.isPending) ? (
