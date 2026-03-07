@@ -307,14 +307,14 @@ const Waitlist = () => {
                                     type="submit"
                                     disabled={isSubmitting || waitlistMutation.isPending}
                                     className={`w-[180px] flex justify-self-center justify-center items-center mt-8 px-4 py-3 text-white rounded-full font-semibold transition-all shadow-xl ${(isSubmitting || waitlistMutation.isPending)
-                                        ? 'bg-gray-500 cursor-not-allowed opacity-70'
-                                        : 'bg-black hover:bg-gray-900 hover:scale-105'
+                                        ? 'bg-gray-400 text-gray-100 cursor-not-allowed'
+                                        : 'bg-black text-white hover:bg-gray-900 hover:scale-105'
                                         }`}
                                 >
                                     {(isSubmitting || waitlistMutation.isPending) ? (
                                         <div className="flex items-center gap-2">
                                             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                            {/* <span>Joining...</span> */}
+                                            <span>Joining...</span>
                                         </div>
                                     ) : (
                                         'Join waitlist'
