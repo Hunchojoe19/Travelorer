@@ -2,8 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase';
 import Navbar from '../components/Navbar';
 import SuccessModal from '../components/SuccessModal';
 import countryList from 'react-select-country-list';
@@ -61,22 +59,7 @@ const Waitlist = () => {
                 nationality: formData.nationality
             };
 
-            await waitlistMutation.mutateAsync(apiPayload).unwrap()
-
-            // Save to Firestore as backward compatibility (optional but keeping to avoid breaking things)
-            try {
-                const docRef = await addDoc(collection(db, 'waitlist'), {
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    email: formData.email,
-                    phoneNumber: formData.phoneNumber,
-                    nationality: formData.nationality,
-                    createdAt: serverTimestamp()
-                });
-                console.log("Document written with ID: ", docRef.id);
-            } catch (fsError) {
-                console.warn('Could not save to Firestore, but API succeeded', fsError);
-            }
+            await waitlistMutation.mutateAsync(apiPayload);
 
             // Show inline success card and modal
             setIsSuccess(true);
