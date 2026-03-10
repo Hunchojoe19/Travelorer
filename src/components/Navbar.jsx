@@ -87,10 +87,10 @@ const Navbar = ({ forceBlue = false, logoOnly = false }) => {
             {isOpen && !logoOnly && (
                 <div className={`md:hidden absolute top-full left-0 w-full shadow-lg border-b ${forceBlue ? 'bg-[#003B95] border-white/10' : 'bg-white/95 backdrop-blur-md border-gray-100'}`}>
                     <div className="px-4 pt-2 pb-6 space-y-2">
-                        {pathName !== '/waitlist' && <a href="#why" className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Why Tourain</a>}
-                        {pathName === '/waitlist' && <a href="/" className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Home</a>}
-                        {pathName !== '/waitlist' && <a href="#features" className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Features</a>}
-                        {pathName !== '/waitlist' && <Link to="/waitlist" className={`block px-3 py-2 text-center rounded-full font-medium mt-4 ${forceBlue ? 'bg-white text-[#003B95]' : 'bg-black text-white'}`}> Join the waitlist</Link>}
+                        {pathName !== '/waitlist' && <a href="#why" onClick={() => setIsOpen(false)} className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Why Tourain</a>}
+                        {pathName === '/waitlist' && <a href="/" onClick={() => setIsOpen(false)} className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Home</a>}
+                        {pathName !== '/waitlist' && <a href="#features" onClick={() => setIsOpen(false)} className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Features</a>}
+                        {pathName !== '/waitlist' && <Link to="/waitlist" onClick={() => setIsOpen(false)} className={`block px-3 py-2 text-center rounded-full font-medium mt-4 ${forceBlue ? 'bg-white text-[#003B95]' : 'bg-black text-white'}`}> Join the waitlist</Link>}
                     </div>
                 </div>
             )}
