@@ -31,7 +31,7 @@ const CombinedFooter = () => {
     return (
         <>
             {/* Earn Section Portion */}
-            <section className="pt-24 bg-white relative z-10">
+            <section className="pt-24 bg-white relative z-10" id='features'>
                 <div className="text-center mb-20">
                     <h2 className="text-5xl font-bold text-gray-900 mb-2">Earn</h2>
                     <p className="text-gray-400 text-sm sentence tracking-wide font-medium">A smart way to turn your passion into profits</p>

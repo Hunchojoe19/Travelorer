@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const Discover = () => {
     return (
-        <section className="py-24 bg-white overflow-hidden">
+        <section className="py-24 bg-white overflow-hidden" id='why'>
 
             {/* Header */}
             <motion.div
