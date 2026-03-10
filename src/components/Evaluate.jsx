@@ -15,11 +15,11 @@ const Evaluate = () => {
                 {/* Left Side Content */}
                 <div className="order-2 md:order-1 p-8">
                     <div className="w-max flex items-center gap-x-3 px-4 py-3 bg-[#02FE281A] text-[#04E226] border border-[#04E226] text-xs font-bold rounded-full mb-4 uppercase">
-                       <Trend/> Predictive Analytics
+                        <Trend /> Predictive Analytics
                     </div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-3">Test your eligibility,<br /> with confidence.</h3>
                     <p className="text-gray-500 leading-relaxed text-sm">
-                       Predict your immigration outcome by assessing your risks, preferences, budget, and travel history with an instant readiness score to determine actionable steps.
+                        Predict your immigration outcome by assessing your risks, preferences, budget, and travel history with an instant readiness score to determine actionable steps.
                     </p>
                 </div>
 
@@ -70,7 +70,7 @@ const Evaluate = () => {
                 <div className="order-2 p-8">
                     <h3 className="text-2xl font-bold text-gray-900 mb-3">Rejections, Reviews &<br /> Reapplications.</h3>
                     <p className="text-gray-500 leading-relaxed text-sm">
-                       Get professional and legal experts to handle your reviews, appeals and administrative analysis with feedback that helps you navigate complicated situations and think like an expert.
+                        Get professional and legal experts to handle your reviews, appeals and administrative analysis with feedback that helps you navigate complicated situations and think like an expert.
                     </p>
                 </div>
             </div>
