@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SuccessModal = ({ isOpen, onClose, userEmail }) => {
+    console.log({ userEmail })
     return (
         <AnimatePresence>
             {isOpen && (

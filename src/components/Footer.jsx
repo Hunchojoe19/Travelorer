@@ -141,7 +141,7 @@ const CombinedFooter = () => {
                             <div className='flex items-center gap-x-2 cursor-pointer hover:text-white transition-colors'>
 
                                 <GoMail className='w-[24px] h-[24px]' />
-                                <p>hello@tourain.com</p>
+                                <p>support@tourain.com</p>
                             </div>
                             <div className='flex items-center gap-x-2 cursor-pointer hover:text-white transition-colors'>
 
