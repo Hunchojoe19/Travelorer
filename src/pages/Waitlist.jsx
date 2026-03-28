@@ -30,7 +30,7 @@ const Waitlist = () => {
             ></div>
 
             {/* Subtle Gradient Overlay */}
-            <div className="absolute inset-0 bg-blue-600/20 z-0"></div>
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-[#0276FE] via-[#7CB8FE] to-[#FFFFFF]0/20 z-0"></div>
 
             <div className="relative z-10 w-full flex flex-1 items-center justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Main Container - Flex Row on Desktop */}
