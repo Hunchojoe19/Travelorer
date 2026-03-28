@@ -29,10 +29,14 @@ const Hero = () => {
                     transition={{ duration: 0.6 }}
                     className="flex-1 max-w-xl text-left"
                 >
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                        The Smart Way To <br />
-                        Get Your{' '}
-                        <motion.span
+                    <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                        {/* The Smart Way To <br />
+                        Get Your{' '} */}
+                        One App to
+                        <br />
+                        <span className="text-yellow-400 capitalize">navigate</span> your
+                        journey
+                        {/* <motion.span
                             layout
                             className="inline-flex relative h-[1.2em] overflow-hidden align-middle"
                             transition={{ duration: 0.3, ease: "easeOut" }}
@@ -51,11 +55,11 @@ const Hero = () => {
                                 </motion.span>
                             </AnimatePresence>
                         </motion.span>{' '}
-                        Visa
+                        Visa */}
                     </h1>
 
                     <p className="text-black text-lg font-light mb-10">
-                        Tourain simplifies the application process by assisting you with the information, preparation and resources you need to navigate easily.
+                        Tourain simplifies your journey by assisting you with the information, preparation and resources you need to navigate easily.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
