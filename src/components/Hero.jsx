@@ -29,7 +29,7 @@ const Hero = () => {
                     transition={{ duration: 0.6 }}
                     className="flex-1 max-w-xl text-left"
                 >
-                    <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                    <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
                         {/* The Smart Way To <br />
                         Get Your{' '} */}
                         One App to
