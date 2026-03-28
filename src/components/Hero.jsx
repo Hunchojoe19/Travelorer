@@ -19,7 +19,7 @@ const Hero = () => {
             className="relative pt-32 pb-20 overflow-hidden bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: "url('https://res.cloudinary.com/dc59hhvse/image/upload/v1768401091/685cc40648a523c6ae809c7e_bg-hero_nmuu2k.png')" }}
         >
-            <div className="absolute inset-0 pointer-events-none bg-blue-600/20"></div>
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-[#0276FE] via-[#7CB8FE] to-[#FFFFFF]"></div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-12 lg:gap-20 relative z-10">
 
                 {/* Left Content - Centered */}
