@@ -123,6 +123,14 @@ export default function ProfileWizard() {
 
     return (
         <ProfileLayout activeSection="personal" completed={step === 'complete' ? ['personal'] : []}>
+            <div className="mx-auto mb-4 h-1 max-w-2xl overflow-hidden rounded-full bg-gray-100" aria-hidden="true">
+                <motion.div
+                    className="h-full rounded-full bg-gradient-to-r from-[#003B95] to-[#2F6FED]"
+                    initial={false}
+                    animate={{ width: `${(Math.max(stepNumber - 1, 0) / Math.max(steps.length - 1, 1)) * 100}%` }}
+                    transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+                />
+            </div>
             {step !== 'complete' && (
                 <div className="mx-auto mb-6 flex max-w-2xl items-center justify-between text-xs text-gray-500">
                     <button type="button" onClick={goBack} className="inline-flex items-center gap-1 rounded px-1 py-1 hover:text-gray-800">
