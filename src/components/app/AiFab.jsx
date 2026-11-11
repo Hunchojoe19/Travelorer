@@ -28,6 +28,7 @@ function TypingDots() {
                     transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.15 }}
                 />
             ))}
+            <span className="ml-1.5 text-xs text-gray-400">Thinking…</span>
         </span>
     );
 }
