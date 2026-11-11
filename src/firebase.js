@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { CustomProvider, initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { CustomProvider, initializeAppCheck, ReCaptchaEnterpriseProvider, ReCaptchaV3Provider } from 'firebase/app-check';
 
 /**
  * Firebase (project: travelorer-paddy, free Spark plan).
@@ -24,14 +24,17 @@ export const auth = getAuth(app);
 
 /**
  * App Check proves requests come from this site; Firebase AI Logic rejects
- * requests without it. Production uses reCAPTCHA v3 (VITE_RECAPTCHA_SITE_KEY).
+ * requests without it. Production uses reCAPTCHA Enterprise
+ * (VITE_RECAPTCHA_ENTERPRISE_SITE_KEY) or, alternatively, reCAPTCHA v3 (VITE_RECAPTCHA_SITE_KEY).
+ * Firebase checks the tokens itself, so no server code is needed.
  * On localhost, a debug token is used instead: set VITE_APPCHECK_DEBUG_TOKEN to
  * the token registered in Firebase console > App Check > Manage debug tokens
  * (or leave it empty and copy the one printed in the browser console).
  */
 export const appCheckReady = (() => {
     if (typeof window === 'undefined') return false;
-    const siteKey = env.VITE_RECAPTCHA_SITE_KEY;
+    const enterpriseKey = env.VITE_RECAPTCHA_ENTERPRISE_SITE_KEY;
+    const siteKey = enterpriseKey || env.VITE_RECAPTCHA_SITE_KEY;
     const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
     if (isLocal) {
         // eslint-disable-next-line no-restricted-globals
@@ -41,9 +44,10 @@ export const appCheckReady = (() => {
     try {
         // On localhost the debug token is used instead of the provider, so without a
         // site key a placeholder provider avoids loading reCAPTCHA for nothing.
-        const provider = siteKey
-            ? new ReCaptchaV3Provider(siteKey)
-            : new CustomProvider({ getToken: () => Promise.reject(new Error('App Check debug token only')) });
+        let provider;
+        if (enterpriseKey) provider = new ReCaptchaEnterpriseProvider(enterpriseKey);
+        else if (siteKey) provider = new ReCaptchaV3Provider(siteKey);
+        else provider = new CustomProvider({ getToken: () => Promise.reject(new Error('App Check debug token only')) });
         initializeAppCheck(app, {
             provider,
             isTokenAutoRefreshEnabled: true,
