@@ -34,7 +34,7 @@ export default function useChat(mode, greeting) {
         async (rawText) => {
             const text = rawText.trim();
             if (!text || busy) return;
-            const history = messagesRef.current.filter((m) => !m.error && !m.local).map(({ role, text: t }) => ({ role, text: t }));
+            const history = messagesRef.current.filter((m) => !m.error && !m.local && !m.pending).map(({ role, text: t }) => ({ role, text: t }));
             const userMsg = { id: newId(), role: 'user', text };
             const replyId = newId();
             setMessages((prev) => [...prev, userMsg, { id: replyId, role: 'model', text: '', pending: true }]);
