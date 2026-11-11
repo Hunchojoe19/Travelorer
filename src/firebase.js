@@ -31,6 +31,7 @@ export const auth = getAuth(app);
  * the token registered in Firebase console > App Check > Manage debug tokens
  * (or leave it empty and copy the one printed in the browser console).
  */
+export let appCheck = null;
 export const appCheckReady = (() => {
     if (typeof window === 'undefined') return false;
     const enterpriseKey = env.VITE_RECAPTCHA_ENTERPRISE_SITE_KEY;
@@ -48,7 +49,7 @@ export const appCheckReady = (() => {
         if (enterpriseKey) provider = new ReCaptchaEnterpriseProvider(enterpriseKey);
         else if (siteKey) provider = new ReCaptchaV3Provider(siteKey);
         else provider = new CustomProvider({ getToken: () => Promise.reject(new Error('App Check debug token only')) });
-        initializeAppCheck(app, {
+        appCheck = initializeAppCheck(app, {
             provider,
             isTokenAutoRefreshEnabled: true,
         });
