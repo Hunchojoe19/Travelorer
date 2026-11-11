@@ -1,9 +1,10 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { CustomProvider, initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
 /**
  * Firebase (project: travelorer-paddy, free Spark plan).
- * Only Authentication is used. Values come from .env (VITE_FIREBASE_*); the
+ * Uses Authentication, plus Firebase AI Logic (Gemini) for Tourain AI. Values come from .env (VITE_FIREBASE_*); the
  * defaults below are the same public web config, so deploys work even if the
  * host has no env vars set. Web config is not secret.
  */
@@ -20,6 +21,38 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+
+/**
+ * App Check proves requests come from this site; Firebase AI Logic rejects
+ * requests without it. Production uses reCAPTCHA v3 (VITE_RECAPTCHA_SITE_KEY).
+ * On localhost, a debug token is used instead: set VITE_APPCHECK_DEBUG_TOKEN to
+ * the token registered in Firebase console > App Check > Manage debug tokens
+ * (or leave it empty and copy the one printed in the browser console).
+ */
+export const appCheckReady = (() => {
+    if (typeof window === 'undefined') return false;
+    const siteKey = env.VITE_RECAPTCHA_SITE_KEY;
+    const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    if (isLocal) {
+        // eslint-disable-next-line no-restricted-globals
+        self.FIREBASE_APPCHECK_DEBUG_TOKEN = env.VITE_APPCHECK_DEBUG_TOKEN || true;
+    }
+    if (!siteKey && !isLocal) return false;
+    try {
+        // On localhost the debug token is used instead of the provider, so without a
+        // site key a placeholder provider avoids loading reCAPTCHA for nothing.
+        const provider = siteKey
+            ? new ReCaptchaV3Provider(siteKey)
+            : new CustomProvider({ getToken: () => Promise.reject(new Error('App Check debug token only')) });
+        initializeAppCheck(app, {
+            provider,
+            isTokenAutoRefreshEnabled: true,
+        });
+        return true;
+    } catch {
+        return false;
+    }
+})();
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
