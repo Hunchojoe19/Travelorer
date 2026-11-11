@@ -12,7 +12,7 @@ const WaitlistHeader = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="flex-1 text-center lg:text-left lg:max-w-md py-12 relative"
         >
-            {/* Animated Plane flying in a circular path */}
+            {/* Animated Plane flying in a circular path
             <motion.div
                 className="absolute text-4xl z-10"
                 animate={{
@@ -33,6 +33,7 @@ const WaitlistHeader = () => {
             >
                 ✈️
             </motion.div>
+            */}
 
             <h1 className="text-7xl md:text-[96px] font-bold text-white mb-4 lg:mb-6">
                 JOIN THE WAITLIST
