@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 
@@ -9,7 +10,12 @@ export default function AppHeader() {
     const navigate = useNavigate();
     const { signOut } = useAuth();
     return (
-        <header className="border-b border-gray-200 bg-white">
+        <motion.header
+            initial={{ y: -64, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            className="sticky top-0 z-30 border-b border-gray-200 bg-white/90 backdrop-blur"
+        >
             <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
                 <button type="button" onClick={() => navigate('/dashboard')} aria-label="Go to dashboard">
                     <img src={LOGO} alt="Tourain" className="h-[24px] w-[122px]" />
@@ -25,6 +31,6 @@ export default function AppHeader() {
                     Sign out
                 </button>
             </div>
-        </header>
+        </motion.header>
     );
 }
