@@ -19,8 +19,7 @@ const GOALS = [
         arrow: 'bg-[#3B82F6] text-white',
         image: discoverImage,
         imageClass: 'bottom-0 left-1/2 h-[190px] -translate-x-[60%] opacity-50',
-        comingSoon: true,
-        badge: 'bg-white/15 text-white ring-1 ring-white/25',
+        to: '/discover',
     },
     {
         id: 'evaluate',
