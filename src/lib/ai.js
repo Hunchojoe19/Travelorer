@@ -157,11 +157,32 @@ function systemInstruction(mode, user) {
 const MAX_HISTORY = 20;
 
 /**
+ * Gemini needs turns to alternate user → model → user. A question whose reply
+ * failed (or was stopped) leaves two user turns in a row, so keep only answered
+ * questions, and make sure the history ends with a model turn because the new
+ * question is sent after it.
+ */
+function cleanHistory(history) {
+    const out = [];
+    for (const m of history) {
+        const text = (m.text || '').trim();
+        if (!text || (m.role !== 'user' && m.role !== 'model')) continue;
+        const prev = out[out.length - 1];
+        if (prev && prev.role === m.role) {
+            if (m.role === 'user') out[out.length - 1] = { role: 'user', text }; // unanswered question: keep the latest
+            else prev.text = `${prev.text}\n\n${text}`;
+        } else out.push({ role: m.role, text });
+    }
+    while (out.length && out[out.length - 1].role !== 'model') out.pop();
+    return out;
+}
+
+/**
  * Sends `text` with the earlier conversation and streams the reply.
  * `history` is [{ role: 'user' | 'model', text }]. Calls onText(fullTextSoFar).
  */
 export async function streamReply({ mode, user, history, text, onText, signal }) {
-    const turns = history.slice(-MAX_HISTORY);
+    const turns = cleanHistory(history).slice(-MAX_HISTORY);
     // Gemini expects the history to start with a user turn.
     while (turns.length && turns[0].role !== 'user') turns.shift();
     const chat = getModel().startChat({
@@ -196,8 +217,15 @@ export async function streamReply({ mode, user, history, text, onText, signal })
     return full;
 }
 
-/** Turns an SDK error into something the user can act on. */
+/** Turns an SDK error into something the user can act on (with the server's own message in development). */
 export function friendlyAiError(error) {
+    const message = describeAiError(error);
+    if (!import.meta.env.DEV) return message;
+    const detail = String(error?.message || error || '').replace(/^.*?:\s*(?=\[\d{3})/, '').slice(0, 400);
+    return detail ? `${message}\n\n\`Details (only shown on localhost): ${detail.replace(/`/g, "'")}\`` : message;
+}
+
+function describeAiError(error) {
     // Drop the request URL (it contains words like "models" and "generate") before matching.
     const raw = `${error?.code || ''} ${error?.message || error || ''}`.replace(/https?:\/\/\S+/g, '');
     const status = Number(error?.customErrorData?.status || raw.match(/\[(\d{3})/)?.[1] || 0);
@@ -205,8 +233,14 @@ export function friendlyAiError(error) {
     if (/app.?check|attestation|recaptcha/i.test(raw)) {
         return 'Tourain AI could not verify this browser (App Check). If you run this site, add the App Check debug token or reCAPTCHA key described in the setup notes.';
     }
-    if (/api-not-enabled|has not been used|SERVICE_DISABLED|PERMISSION_DENIED/i.test(raw) || status === 403) {
+    if (/API_KEY_SERVICE_BLOCKED|are blocked|API key not valid|API_KEY_INVALID|REFERRER_BLOCKED|referer/i.test(raw)) {
+        return "The site's Firebase API key isn't allowed to use Firebase AI Logic. In Google Cloud console > APIs & Services > Credentials, open the Browser key and add \"Firebase AI Logic API\" to its API restrictions (and make sure this site's address is allowed).";
+    }
+    if (/api-not-enabled|has not been used|SERVICE_DISABLED|is disabled/i.test(raw)) {
         return 'Tourain AI is not switched on for this Firebase project yet. Enable Firebase AI Logic (Gemini Developer API) in the Firebase console.';
+    }
+    if (/PERMISSION_DENIED/i.test(raw) || status === 403) {
+        return 'Firebase refused the request (permission denied). Check that Firebase AI Logic is set up with the Gemini Developer API and that App Check is configured for this site.';
     }
     if (/quota|RESOURCE_EXHAUSTED|rate.?limit/i.test(raw) || status === 429) return 'Tourain AI is busy right now. Please try again in a minute.';
     if (status === 404) return 'The AI model is unavailable. Check VITE_GEMINI_MODEL in your .env.';
