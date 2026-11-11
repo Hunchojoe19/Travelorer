@@ -1,6 +1,8 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
     createUserWithEmailAndPassword,
+    getAdditionalUserInfo,
+    sendEmailVerification,
     onAuthStateChanged,
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
@@ -8,6 +10,7 @@ import {
     signOut as firebaseSignOut,
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
+import { sendWelcomeEmail } from '../lib/welcomeEmail';
 
 /** Login session backed by Firebase Authentication (Google + email/password). */
 const AuthContext = createContext(null);
@@ -19,8 +22,20 @@ function toUser(firebaseUser) {
         email: firebaseUser.email || '',
         name: firebaseUser.displayName || '',
         photoURL: firebaseUser.photoURL || '',
+        emailVerified: Boolean(firebaseUser.emailVerified),
+        providers: (firebaseUser.providerData || []).map((p) => p.providerId),
     };
 }
+
+/** Email/password accounts must confirm their email before using the app. */
+export function needsEmailVerification(user) {
+    if (!user) return false;
+    const usesPassword = user.providers.includes('password');
+    const hasGoogle = user.providers.includes('google.com');
+    return usesPassword && !hasGoogle && !user.emailVerified;
+}
+
+const verificationSettings = () => ({ url: `${window.location.origin}/verify-email` });
 
 /** Friendly messages for the Firebase errors users actually hit. */
 export function authErrorMessage(error) {
@@ -46,6 +61,7 @@ export function authErrorMessage(error) {
             return null; // user closed it: no error needed
         case 'auth/operation-not-allowed':
             return 'This sign-in method is not enabled yet.';
+        case 'auth/unauthorized-continue-uri':
         case 'auth/unauthorized-domain':
             return 'This website is not authorised for sign-in yet.';
         default:
@@ -69,7 +85,10 @@ export function AuthProvider({ children }) {
 
     const signInWithGoogle = useCallback(async () => {
         const result = await signInWithPopup(auth, googleProvider);
-        return toUser(result.user);
+        const signedIn = toUser(result.user);
+        // First time with Google = new Tourain account: send the welcome email.
+        if (getAdditionalUserInfo(result)?.isNewUser) void sendWelcomeEmail(signedIn);
+        return signedIn;
     }, []);
 
     const signInWithEmail = useCallback(async (email, password) => {
@@ -79,7 +98,25 @@ export function AuthProvider({ children }) {
 
     const signUpWithEmail = useCallback(async (email, password) => {
         const result = await createUserWithEmailAndPassword(auth, email.trim(), password);
+        // Firebase emails a verification link (free on the Spark plan).
+        await sendEmailVerification(result.user, verificationSettings());
         return toUser(result.user);
+    }, []);
+
+    const resendVerificationEmail = useCallback(async () => {
+        if (!auth.currentUser) throw new Error('Not signed in');
+        await sendEmailVerification(auth.currentUser, verificationSettings());
+    }, []);
+
+    /** Re-reads the account from Firebase (e.g. after the user clicks the email link). */
+    const refreshUser = useCallback(async () => {
+        if (!auth.currentUser) return null;
+        await auth.currentUser.reload();
+        const fresh = toUser(auth.currentUser);
+        setUser(fresh);
+        // Email/password users get their welcome email once they've verified.
+        if (fresh?.emailVerified && fresh.providers.includes('password')) void sendWelcomeEmail(fresh);
+        return fresh;
     }, []);
 
     const resetPassword = useCallback((email) => sendPasswordResetEmail(auth, email.trim()), []);
@@ -94,10 +131,12 @@ export function AuthProvider({ children }) {
             signInWithGoogle,
             signInWithEmail,
             signUpWithEmail,
+            resendVerificationEmail,
+            refreshUser,
             resetPassword,
             signOut,
         }),
-        [user, initializing, signInWithGoogle, signInWithEmail, signUpWithEmail, resetPassword, signOut],
+        [user, initializing, signInWithGoogle, signInWithEmail, signUpWithEmail, resendVerificationEmail, refreshUser, resetPassword, signOut],
     );
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
