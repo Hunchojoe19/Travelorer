@@ -30,3 +30,24 @@ export function displayName(user, profile) {
     const first = local.split(/[._-]/)[0] || local;
     return first.charAt(0).toUpperCase() + first.slice(1);
 }
+
+/** Travel history answers (second part of the visa assessment), same storage approach. */
+const travelKeyFor = (userId) => `tourain.travel.${userId}`;
+
+export function loadTravel(userId) {
+    if (!userId) return {};
+    try {
+        return JSON.parse(localStorage.getItem(travelKeyFor(userId)) || '{}');
+    } catch {
+        return {};
+    }
+}
+
+export function saveTravel(userId, travel) {
+    if (!userId) return;
+    try {
+        localStorage.setItem(travelKeyFor(userId), JSON.stringify(travel));
+    } catch {
+        /* storage unavailable */
+    }
+}
