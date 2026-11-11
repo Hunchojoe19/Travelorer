@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { HiCheck } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
+import Confetti from '../components/app/Confetti';
 
 const BACKGROUND =
     "https://res.cloudinary.com/dc59hhvse/image/upload/v1769295772/Background_Image_tlbwuj.png";
@@ -31,25 +31,60 @@ export default function LoginSuccess() {
                     className="flex w-full max-w-[980px] flex-col items-center rounded-2xl bg-white px-6 py-20 text-center shadow-xl sm:py-28"
                     aria-labelledby="login-success-title"
                 >
-                    <motion.div
-                        initial={{ scale: 0.6, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.2, type: 'spring', stiffness: 260, damping: 18 }}
-                        className="flex h-20 w-20 items-center justify-center rounded-full bg-[#4CD964] text-white"
+                    <div className="relative flex h-20 w-20 items-center justify-center">
+                        <Confetti />
+                        {/* expanding ring */}
+                        <motion.span
+                            aria-hidden="true"
+                            className="absolute inset-0 rounded-full bg-[#4CD964]"
+                            initial={{ scale: 1, opacity: 0.45 }}
+                            animate={{ scale: 1.9, opacity: 0 }}
+                            transition={{ delay: 0.45, duration: 1.4, repeat: 2, ease: 'easeOut' }}
+                        />
+                        <motion.div
+                            initial={{ scale: 0.4, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.15, type: 'spring', stiffness: 260, damping: 16 }}
+                            className="relative flex h-20 w-20 items-center justify-center rounded-full bg-[#4CD964] text-white shadow-lg shadow-[#4CD964]/40"
+                        >
+                            <svg viewBox="0 0 24 24" className="h-11 w-11" fill="none" aria-hidden="true">
+                                <motion.path
+                                    d="M5 12.5l4.5 4.5L19 7.5"
+                                    stroke="currentColor"
+                                    strokeWidth="2.6"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    initial={{ pathLength: 0 }}
+                                    animate={{ pathLength: 1 }}
+                                    transition={{ delay: 0.45, duration: 0.45, ease: 'easeOut' }}
+                                />
+                            </svg>
+                        </motion.div>
+                    </div>
+                    <motion.h1
+                        id="login-success-title"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7 }}
+                        className="mt-8 text-2xl font-semibold text-[#3CC13B]"
                     >
-                        <HiCheck className="h-12 w-12" strokeWidth={1} />
-                    </motion.div>
-                    <h1 id="login-success-title" className="mt-8 text-2xl font-semibold text-[#3CC13B]">
                         Login Successful!
-                    </h1>
-                    <p className="mt-3 text-sm text-gray-800">Welcome back to Tourain AI Visa Assistant</p>
-                    <button
+                    </motion.h1>
+                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.85 }} className="mt-3 text-sm text-gray-800">
+                        Welcome back to Tourain AI Visa Assistant
+                    </motion.p>
+                    <motion.button
                         type="button"
                         onClick={() => navigate('/dashboard', { replace: true })}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1 }}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.97 }}
                         className="mt-8 rounded-lg bg-black px-10 py-3 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
                     >
                         Continue
-                    </button>
+                    </motion.button>
                 </motion.section>
             </main>
         </div>
