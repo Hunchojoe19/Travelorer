@@ -10,9 +10,11 @@ import ProfileWizard from './pages/ProfileWizard';
 import RequireAuth from './auth/RequireAuth';
 import { AuthProvider } from './auth/AuthContext';
 import { Toaster } from 'react-hot-toast';
+import { MotionConfig } from 'framer-motion';
 
 function App() {
     return (
+        <MotionConfig reducedMotion="user">
         <AuthProvider>
             <Router>
                 <Toaster />
@@ -31,6 +33,7 @@ function App() {
                 </Routes>
             </Router>
         </AuthProvider>
+        </MotionConfig>
     );
 }
 
