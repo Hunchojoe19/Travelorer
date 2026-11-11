@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { HiArrowLeft } from 'react-icons/hi';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../auth/AuthContext';
 import { loadProfile, saveProfile } from '../lib/profileStore';
-import ProfileLayout from '../components/profile/ProfileLayout';
+import ProfileLayout, { scrollContentToTop } from '../components/profile/ProfileLayout';
 import PersonalProfileStep from '../components/profile/PersonalProfileStep';
 import ChoiceStep from '../components/profile/ChoiceStep';
 import ProfileComplete from '../components/profile/ProfileComplete';
@@ -38,6 +38,22 @@ export default function ProfileWizard() {
     const [step, setStep] = useState('personal');
     const steps = useMemo(() => stepsFor(profile), [profile]);
 
+    // Clicking "Personal Profile" in the side menu while already here re-opens the
+    // summary of a completed profile (any unfinished update is dropped).
+    const location = useLocation();
+    const firstVisit = useRef(true);
+    useEffect(() => {
+        if (firstVisit.current) {
+            firstVisit.current = false;
+            return;
+        }
+        if (saved.completedAt) {
+            setProfile(saved);
+            setMode('summary');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.key]);
+
     const update = (patch) => {
         const next = { ...profile, ...patch };
         if (patch.employmentStatus && !needsProfession(patch.employmentStatus)) delete next.profession;
@@ -55,7 +71,7 @@ export default function ProfileWizard() {
         setProfile(saved);
         setStep('personal');
         setMode('edit');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollContentToTop();
     };
 
     const cancelEditing = () => {
@@ -67,7 +83,7 @@ export default function ProfileWizard() {
         const order = stepsFor(nextProfile);
         const index = order.indexOf(step);
         setStep(order[Math.min(index + 1, order.length - 1)]);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollContentToTop();
     };
 
     const goBack = () => {
@@ -84,14 +100,20 @@ export default function ProfileWizard() {
         setSaved(final);
         setProfile(final);
         setMode('summary');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        toast.success(isComplete ? 'Profile updated.' : 'Profile saved. Travel details are coming next.');
+        scrollContentToTop();
+        if (isComplete) {
+            toast.success('Profile updated.');
+        } else {
+            // First time: carry straight on into the Travel History questions.
+            toast.success('Profile saved.');
+            navigate('/evaluate/travel');
+        }
     };
 
     if (mode === 'summary') {
         return (
             <ProfileLayout activeSection="personal" completed={['personal']}>
-                <ProfileSummary profile={saved} onEdit={startEditing} />
+                <ProfileSummary profile={saved} onEdit={startEditing} onContinue={() => navigate('/evaluate/travel')} />
             </ProfileLayout>
         );
     }
