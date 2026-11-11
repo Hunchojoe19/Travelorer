@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { needsEmailVerification, useAuth } from './AuthContext';
 
 /** Sends signed-out visitors to the sign-in page, then back here after login. */
 export default function RequireAuth({ children }) {
-    const { isSignedIn, initializing } = useAuth();
+    const { isSignedIn, initializing, user } = useAuth();
     const location = useLocation();
     if (initializing) {
         return (
@@ -15,6 +15,10 @@ export default function RequireAuth({ children }) {
     }
     if (!isSignedIn) {
         return <Navigate to="/signup" replace state={{ from: location.pathname, login: true }} />;
+    }
+    // Email/password accounts confirm their email first.
+    if (needsEmailVerification(user)) {
+        return <Navigate to="/verify-email" replace />;
     }
     return children;
 }
