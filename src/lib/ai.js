@@ -1,6 +1,7 @@
 import { getAI, getGenerativeModel, GoogleAIBackend, ThinkingLevel } from 'firebase/ai';
 import countryList from 'react-select-country-list';
-import { app } from '../firebase';
+import { getToken as getAppCheckToken } from 'firebase/app-check';
+import { app, appCheck } from '../firebase';
 import { displayName, loadProfile, loadTravel } from './profileStore';
 import { EMPLOYMENT_OPTIONS, GENDER_LABELS, MARITAL_OPTIONS, PROFESSION_OPTIONS } from '../components/profile/options';
 import {
@@ -17,14 +18,15 @@ import {
  * free on the Spark plan). No API key lives in this code: Firebase handles it,
  * and App Check (see firebase.js) makes sure only this site can call it.
  */
-const MODEL = import.meta.env.VITE_GEMINI_MODEL || 'gemini-3.8-flash';
+// gemini-3.5-flash-lite starts answering in ~1s on this project; gemini-3.8-flash hung (Nov 2026).
+const MODEL = import.meta.env.VITE_GEMINI_MODEL || 'gemini-3.5-flash-lite';
 
 let model;
 function getModel() {
     if (!model) {
         const ai = getAI(app, { backend: new GoogleAIBackend() });
-        // Give up on a request after 60s instead of the SDK's default 3 minutes.
-        model = getGenerativeModel(ai, { model: MODEL }, { timeout: 60000 });
+        // The SDK's own limit (App Check + waiting for the first words); ours below is shorter.
+        model = getGenerativeModel(ai, { model: MODEL }, { timeout: 90000 });
     }
     return model;
 }
@@ -178,14 +180,43 @@ function cleanHistory(history) {
     return out;
 }
 
-const FIRST_WORD_TIMEOUT = 45000; // no text at all after this long → give up
+const FIRST_WORD_TIMEOUT = 30000; // no text at all after this long → give up
 const STALL_TIMEOUT = 30000; // reply stops mid-way for this long → give up
 
 class AiTimeoutError extends Error {
-    constructor() {
-        super('Tourain AI timed out');
-        this.code = 'timeout';
+    constructor(message = 'Tourain AI timed out', code = 'timeout') {
+        super(message);
+        this.code = code;
     }
+}
+
+const withinMs = (promise, ms, makeError) => {
+    let timer;
+    return Promise.race([
+        promise.finally(() => clearTimeout(timer)),
+        new Promise((_, reject) => {
+            timer = setTimeout(() => reject(makeError()), ms);
+        }),
+    ]);
+};
+
+/**
+ * Gets the App Check token first (Firebase caches it, so the AI request reuses it).
+ * Doing it separately tells us whether a slow reply is App Check or the model.
+ */
+async function checkAppCheck() {
+    if (!appCheck) return;
+    const t0 = Date.now();
+    const result = await withinMs(
+        getAppCheckToken(appCheck, false),
+        15000,
+        () => new AiTimeoutError('App Check did not respond within 15s', 'appcheck-timeout'),
+    );
+    if (import.meta.env.DEV) {
+        console.info(`[Tourain AI] App Check token in ${Date.now() - t0}ms`);
+        if (result?.error) console.warn('[Tourain AI] App Check problem:', result.error.message);
+    }
+    return result;
 }
 
 /** Resolves the next stream chunk, or rejects if it takes longer than `ms`. */
@@ -234,14 +265,26 @@ export async function streamReply({ mode, user, history, text, onText, signal })
             })
             .sendMessageStream(text);
 
+    try {
+        await checkAppCheck();
+    } catch (error) {
+        if (error?.code === 'appcheck-timeout') throw error;
+        throw new AiTimeoutError(`App Check failed: ${error?.message || error}`, 'appcheck-failed');
+    }
+
+    const t1 = Date.now();
+    // sendMessageStream resolves once the model starts answering.
+    const start = (withThinkingLimit) =>
+        withinMs(open(withThinkingLimit), FIRST_WORD_TIMEOUT, () => new AiTimeoutError(`Gemini (${MODEL}) did not start answering within ${FIRST_WORD_TIMEOUT / 1000}s`));
     let result;
     try {
-        result = await open(true);
+        result = await start(true);
     } catch (error) {
         // Models without thinking levels (e.g. if VITE_GEMINI_MODEL is changed) reject the setting.
         if (!/thinking/i.test(String(error?.message))) throw error;
-        result = await open(false);
+        result = await start(false);
     }
+    if (import.meta.env.DEV) console.info(`[Tourain AI] ${MODEL} started answering after ${Date.now() - t1}ms`);
 
     const iterator = result.stream[Symbol.asyncIterator]();
     let full = '';
@@ -278,7 +321,10 @@ function describeAiError(error) {
     const raw = `${error?.code || ''} ${error?.message || error || ''}`.replace(/https?:\/\/\S+/g, '');
     const status = Number(error?.customErrorData?.status || raw.match(/\[(\d{3})/)?.[1] || 0);
     if (typeof navigator !== 'undefined' && navigator.onLine === false) return "You're offline. Check your connection and try again.";
-    if (error?.code === 'timeout' || /timed? ?out|deadline|aborted/i.test(raw)) return 'Tourain AI took too long to answer. Please try again.';
+    if (error?.code === 'appcheck-timeout' || error?.code === 'appcheck-failed') {
+        return 'Tourain AI could not verify this browser (App Check didn\'t respond). Check the App Check debug token in .env and that it is registered in the Firebase console.';
+    }
+    if (error?.code === 'timeout' || /timed? ?out|timeout has expired|deadline|aborted/i.test(raw)) return 'Tourain AI took too long to answer. Please try again.';
     if (/app.?check|attestation|recaptcha/i.test(raw)) {
         return 'Tourain AI could not verify this browser (App Check). If you run this site, add the App Check debug token or reCAPTCHA key described in the setup notes.';
     }
