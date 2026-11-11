@@ -8,19 +8,21 @@ import { CustomProvider, initializeAppCheck, ReCaptchaEnterpriseProvider, ReCapt
  * All values come from environment variables: .env locally (never committed) and
  * the hosting provider's environment settings (Vercel) for deploys. Nothing is
  * hard-coded here, so no keys end up in the repository.
- * Both spellings are accepted, e.g. VITE_FIREBASE_API_KEY or VITE_FIREBASE_API_.
+ * The names ending in "_" (VITE_FIREBASE_API_, …) are the travelorer-paddy project,
+ * where App Check, reCAPTCHA and AI Logic are set up, and win if both spellings exist.
+ * The older names (VITE_FIREBASE_API_KEY, …) are only a fallback.
  */
 const env = import.meta.env;
 const read = (...names) => names.map((name) => env[name]).find((value) => value) || '';
 
 const firebaseConfig = {
-    apiKey: read('VITE_FIREBASE_API_KEY', 'VITE_FIREBASE_API_'),
-    authDomain: read('VITE_FIREBASE_AUTH_DOMAIN', 'VITE_FIREBASE_AUTH_DOMAIN_'),
-    projectId: read('VITE_FIREBASE_PROJECT_ID', 'VITE_FIREBASE_PROJECT_ID_'),
-    storageBucket: read('VITE_FIREBASE_STORAGE_BUCKET', 'VITE_FIREBASE_STORAGE_BUCKET_'),
-    messagingSenderId: read('VITE_FIREBASE_MESSAGING_SENDER_ID', 'VITE_FIREBASE_MESSAGING_SENDER_ID_'),
-    appId: read('VITE_FIREBASE_APP_ID', 'VITE_FIREBASE_APP_ID_'),
-    measurementId: read('VITE_FIREBASE_MEASUREMENT_ID', 'VITE_FIREBASE_MEASUREMENT_ID_'),
+    apiKey: read('VITE_FIREBASE_API_', 'VITE_FIREBASE_API_KEY'),
+    authDomain: read('VITE_FIREBASE_AUTH_DOMAIN_', 'VITE_FIREBASE_AUTH_DOMAIN'),
+    projectId: read('VITE_FIREBASE_PROJECT_ID_', 'VITE_FIREBASE_PROJECT_ID'),
+    storageBucket: read('VITE_FIREBASE_STORAGE_BUCKET_', 'VITE_FIREBASE_STORAGE_BUCKET'),
+    messagingSenderId: read('VITE_FIREBASE_MESSAGING_SENDER_ID_', 'VITE_FIREBASE_MESSAGING_SENDER_ID'),
+    appId: read('VITE_FIREBASE_APP_ID_', 'VITE_FIREBASE_APP_ID'),
+    measurementId: read('VITE_FIREBASE_MEASUREMENT_ID_', 'VITE_FIREBASE_MEASUREMENT_ID'),
 };
 
 const missing = ['apiKey', 'authDomain', 'projectId', 'appId'].filter((key) => !firebaseConfig[key]);
@@ -47,8 +49,8 @@ export const auth = getAuth(app);
 export let appCheck = null;
 export const appCheckReady = (() => {
     if (typeof window === 'undefined') return false;
-    const enterpriseKey = read('VITE_RECAPTCHA_ENTERPRISE_SITE_KEY', 'VITE_RECAPTCHA_ENTERPRISE_SITE_');
-    const siteKey = enterpriseKey || read('VITE_RECAPTCHA_SITE_KEY', 'VITE_RECAPTCHA_SITE_');
+    const enterpriseKey = read('VITE_RECAPTCHA_ENTERPRISE_SITE_', 'VITE_RECAPTCHA_ENTERPRISE_SITE_KEY');
+    const siteKey = enterpriseKey || read('VITE_RECAPTCHA_SITE_', 'VITE_RECAPTCHA_SITE_KEY');
     const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
     if (isLocal) {
         // eslint-disable-next-line no-restricted-globals
