@@ -1,0 +1,257 @@
+import { getAI, getGenerativeModel, GoogleAIBackend } from 'firebase/ai';
+import countryList from 'react-select-country-list';
+import { app } from '../firebase';
+import { displayName, loadProfile, loadTravel } from './profileStore';
+import { EMPLOYMENT_OPTIONS, GENDER_LABELS, MARITAL_OPTIONS, PROFESSION_OPTIONS } from '../components/profile/options';
+import {
+    FUNDING_OPTIONS,
+    PURPOSE_OPTIONS,
+    RESERVATION_OPTIONS,
+    STAY_UNITS,
+    VISA_TYPE_OPTIONS,
+    YES_NO,
+} from '../components/travel/options';
+
+/**
+ * Tourain AI runs on Gemini through Firebase AI Logic (Gemini Developer API,
+ * free on the Spark plan). No API key lives in this code: Firebase handles it,
+ * and App Check (see firebase.js) makes sure only this site can call it.
+ */
+const MODEL = import.meta.env.VITE_GEMINI_MODEL || 'gemini-3.8-flash';
+
+let model;
+function getModel() {
+    if (!model) {
+        const ai = getAI(app, { backend: new GoogleAIBackend() });
+        model = getGenerativeModel(ai, { model: MODEL });
+    }
+    return model;
+}
+
+/* ------------------------------------------------------------------ */
+/* What the AI knows about the user (only what helps with travel advice) */
+/* ------------------------------------------------------------------ */
+
+const countries = countryList();
+export const countryName = (code) => (code ? countries.getLabel(code) || code : '');
+const label = (options, value) => options.find((o) => o.value === value)?.label;
+
+function ageFrom(dateOfBirth) {
+    if (!dateOfBirth) return null;
+    const dob = new Date(dateOfBirth);
+    if (Number.isNaN(dob.getTime())) return null;
+    const now = new Date();
+    let age = now.getFullYear() - dob.getFullYear();
+    if (now < new Date(now.getFullYear(), dob.getMonth(), dob.getDate())) age -= 1;
+    return age;
+}
+
+export function formatMoney(budget) {
+    if (!budget?.amount) return '';
+    try {
+        return new Intl.NumberFormat('en', { style: 'currency', currency: budget.currency || 'NGN', maximumFractionDigits: 0 }).format(budget.amount);
+    } catch {
+        return `${budget.currency || ''} ${budget.amount}`;
+    }
+}
+
+/** Plain summary of the user's saved answers, used by the AI and the Discover dashboard. */
+export function getTravellerSnapshot(user) {
+    const profile = loadProfile(user?.id);
+    const travel = loadTravel(user?.id);
+    const stay = travel.stay ? `${travel.stay.amount} ${label(STAY_UNITS, travel.stay.unit)?.toLowerCase() || ''}`.trim() : '';
+    return {
+        name: displayName(user, profile),
+        profileDone: Boolean(profile.completedAt),
+        travelDone: Boolean(travel.completedAt),
+        travelStarted: Object.keys(travel).length > 0,
+        profile: {
+            age: ageFrom(profile.dateOfBirth),
+            gender: GENDER_LABELS[profile.gender],
+            countryOfResidence: countryName(profile.country),
+            maritalStatus: label(MARITAL_OPTIONS, profile.maritalStatus),
+            employment: label(EMPLOYMENT_OPTIONS, profile.employmentStatus),
+            profession: label(PROFESSION_OPTIONS, profile.profession),
+        },
+        travel: {
+            passport: countryName(travel.passport),
+            destination: countryName(travel.destination),
+            destinationCode: travel.destination || '',
+            purpose: label(PURPOSE_OPTIONS, travel.purpose),
+            visaType: label(VISA_TYPE_OPTIONS, travel.visaType),
+            fundedBy: label(FUNDING_OPTIONS, travel.funding),
+            hadVisaForDestination: label(YES_NO, travel.previousVisa),
+            formalInvitation: label(YES_NO, travel.invitation),
+            lengthOfStay: stay,
+            visaCountriesLast5Years: Array.isArray(travel.visited) ? (travel.visited.length ? travel.visited.map(countryName) : ['None']) : undefined,
+            budget: formatMoney(travel.budget),
+            budgetCurrency: travel.budget?.currency || '',
+            flightOrHotelBooked: label(RESERVATION_OPTIONS, travel.reservation),
+            refusedBefore: label(YES_NO, travel.refusal?.answer),
+            refusedBy: travel.refusal?.countries?.map(countryName),
+            refusalReason: travel.refusal?.reason,
+            timeSensitive: label(YES_NO, travel.timeSensitive),
+        },
+    };
+}
+
+const compact = (obj) =>
+    Object.fromEntries(
+        Object.entries(obj).filter(([, v]) => v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && !v.length)),
+    );
+
+function contextBlock(snapshot) {
+    const lines = [
+        `First name: ${snapshot.name}`,
+        `Today's date: ${new Date().toDateString()}`,
+        `Assessment progress: personal profile ${snapshot.profileDone ? 'complete' : 'not complete'}; travel history ${
+            snapshot.travelDone ? 'complete' : snapshot.travelStarted ? 'started, not finished' : 'not started'
+        }; trip details not available yet (coming soon).`,
+    ];
+    const profile = compact(snapshot.profile);
+    const travel = compact(snapshot.travel);
+    delete travel.destinationCode;
+    delete travel.budgetCurrency;
+    if (Object.keys(profile).length) lines.push(`Profile: ${JSON.stringify(profile)}`);
+    if (Object.keys(travel).length) lines.push(`Travel answers: ${JSON.stringify(travel)}`);
+    return lines.join('\n');
+}
+
+/* ------------------------------------------------------------------ */
+/* Instructions                                                        */
+/* ------------------------------------------------------------------ */
+
+const APP_MAP = `Tourain app pages you can link to. Use markdown links with the app: scheme, exactly as written, and only these:
+- [Dashboard](app:/dashboard): home, choose Discover / Evaluate / Earn
+- [Visa evaluation](app:/evaluate): start or continue the visa assessment
+- [Personal profile](app:/evaluate/profile): view or update personal details
+- [Travel history](app:/evaluate/travel): view, update or continue the travel history questions
+- [Discover](app:/discover): full chat with Ama plus the intelligence dashboard
+Coming soon (mention them as coming soon, never link them): trip details, Earn, Flight Intel, Creator Hub, booking a human assistant, making an application.`;
+
+const RULES = `Rules:
+- Be accurate and practical. Visa rules change: for requirements, fees and processing times, give typical guidance and tell the user to confirm on the official government or embassy site.
+- Never promise a visa outcome. Do not invent live data (exact prices, flight times, approval rates, exchange rates). If you don't know, say so.
+- Use the user's saved answers when they help; don't repeat them back needlessly. Don't ask for things already in the answers.
+- Write in plain, friendly English. Short paragraphs, markdown bullets when listing, **bold** sparingly. No headings.
+- When it would help the user reply, end your message with quick replies on their own last line in exactly this format: [[options: First option | Second option | Third option]] (2-4 short options, max 5 words each).`;
+
+const PERSONAS = {
+    assistant: `You are Tourain AI, the in-app assistant of Tourain, a travel and visa platform.
+Work like an agent: first understand what the user wants by asking short questions, ONE question at a time, usually with quick-reply options. Once you understand, give a clear answer or the concrete next step and link to the right page in the app.
+If their assessment isn't complete and it's relevant, guide them to finish it. For long research-style questions, answer briefly and suggest continuing in [Discover](app:/discover).
+Keep each reply under about 120 words.`,
+    discover: `You are Ama, Tourain's travel co-pilot inside Discover.
+Help the user research and plan their travel: visa requirements and documents, timelines, budgeting, itineraries, accommodation areas, culture, safety and what to expect on arrival. Tailor everything to their saved answers (destination, purpose, budget, length of stay, history).
+Give thorough but scannable answers (usually under about 250 words) and point to app pages when there's a next step there.`,
+};
+
+function systemInstruction(mode, user) {
+    return [PERSONAS[mode], RULES, APP_MAP, `What you know about the user:\n${contextBlock(getTravellerSnapshot(user))}`].join('\n\n');
+}
+
+/* ------------------------------------------------------------------ */
+/* Chat                                                                */
+/* ------------------------------------------------------------------ */
+
+const MAX_HISTORY = 20;
+
+/**
+ * Sends `text` with the earlier conversation and streams the reply.
+ * `history` is [{ role: 'user' | 'model', text }]. Calls onText(fullTextSoFar).
+ */
+export async function streamReply({ mode, user, history, text, onText, signal }) {
+    const turns = history.slice(-MAX_HISTORY);
+    // Gemini expects the history to start with a user turn.
+    while (turns.length && turns[0].role !== 'user') turns.shift();
+    const chat = getModel().startChat({
+        systemInstruction: systemInstruction(mode, user),
+        history: turns.map((m) => ({ role: m.role, parts: [{ text: m.text }] })),
+        generationConfig: { temperature: 0.6, maxOutputTokens: mode === 'discover' ? 1400 : 700 },
+    });
+    const result = await chat.sendMessageStream(text);
+    let full = '';
+    for await (const chunk of result.stream) {
+        if (signal?.aborted) break;
+        let piece = '';
+        try {
+            piece = chunk.text();
+        } catch {
+            piece = '';
+        }
+        if (piece) {
+            full += piece;
+            onText(full);
+        }
+    }
+    if (!full.trim()) {
+        const response = await result.response;
+        try {
+            full = response.text();
+        } catch {
+            full = '';
+        }
+        if (full) onText(full);
+    }
+    return full;
+}
+
+/** Turns an SDK error into something the user can act on. */
+export function friendlyAiError(error) {
+    // Drop the request URL (it contains words like "models" and "generate") before matching.
+    const raw = `${error?.code || ''} ${error?.message || error || ''}`.replace(/https?:\/\/\S+/g, '');
+    const status = Number(error?.customErrorData?.status || raw.match(/\[(\d{3})/)?.[1] || 0);
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) return "You're offline. Check your connection and try again.";
+    if (/app.?check|attestation|recaptcha/i.test(raw)) {
+        return 'Tourain AI could not verify this browser (App Check). If you run this site, add the App Check debug token or reCAPTCHA key described in the setup notes.';
+    }
+    if (/api-not-enabled|has not been used|SERVICE_DISABLED|PERMISSION_DENIED/i.test(raw) || status === 403) {
+        return 'Tourain AI is not switched on for this Firebase project yet. Enable Firebase AI Logic (Gemini Developer API) in the Firebase console.';
+    }
+    if (/quota|RESOURCE_EXHAUSTED|rate.?limit/i.test(raw) || status === 429) return 'Tourain AI is busy right now. Please try again in a minute.';
+    if (status === 404) return 'The AI model is unavailable. Check VITE_GEMINI_MODEL in your .env.';
+    if (/SAFETY|blocked/i.test(raw)) return "I can't help with that one. Try asking in a different way.";
+    if (/failed to fetch|network|fetch-error/i.test(raw) && !status) return "Couldn't reach Tourain AI. Check your connection and try again.";
+    return 'Something went wrong reaching Tourain AI. Please try again.';
+}
+
+/* ------------------------------------------------------------------ */
+/* Saved conversations (this browser, per user and per chat)           */
+/* ------------------------------------------------------------------ */
+
+const chatKey = (mode, userId) => `tourain.chat.${mode}.${userId}`;
+
+export function loadConversation(mode, userId) {
+    if (!userId) return [];
+    try {
+        const list = JSON.parse(localStorage.getItem(chatKey(mode, userId)) || '[]');
+        return Array.isArray(list) ? list : [];
+    } catch {
+        return [];
+    }
+}
+
+export function saveConversation(mode, userId, messages) {
+    if (!userId) return;
+    try {
+        localStorage.setItem(chatKey(mode, userId), JSON.stringify(messages.slice(-40)));
+    } catch {
+        /* storage unavailable */
+    }
+}
+
+/** Splits the trailing "[[options: a | b]]" line off a reply. Hides a half-streamed one. */
+export function splitOptions(text = '') {
+    const match = text.match(/\[\[\s*options\s*:\s*([^\]]*)\]\]\s*$/i);
+    if (match) {
+        const options = match[1]
+            .split('|')
+            .map((o) => o.trim())
+            .filter(Boolean)
+            .slice(0, 4);
+        return { body: text.slice(0, match.index).trimEnd(), options };
+    }
+    const open = text.lastIndexOf('[[');
+    if (open !== -1 && !text.slice(open).includes(']]')) return { body: text.slice(0, open).trimEnd(), options: [] };
+    return { body: text, options: [] };
+}
