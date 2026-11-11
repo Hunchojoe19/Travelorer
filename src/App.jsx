@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Signup from './components/Signup';
 import Waitlist from './pages/Waitlist';
 import LoginSuccess from './pages/LoginSuccess';
+import VerifyEmail from './pages/VerifyEmail';
 import Dashboard from './pages/Dashboard';
 import EvaluateIntro from './pages/EvaluateIntro';
 import ProfileWizard from './pages/ProfileWizard';
@@ -22,6 +23,9 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/waitlist" element={<Waitlist />} />
+
+                    {/* Email/password sign-ups confirm their email here */}
+                    <Route path="/verify-email" element={<VerifyEmail />} />
 
                     {/* Signed-in flow */}
                     <Route path="/login-success" element={<RequireAuth><LoginSuccess /></RequireAuth>} />
