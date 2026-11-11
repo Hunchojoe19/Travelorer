@@ -18,7 +18,7 @@ const GOALS = [
         bullet: 'text-white/90',
         arrow: 'bg-[#3B82F6] text-white',
         image: discoverImage,
-        imageClass: 'bottom-0 left-1/2 h-[190px] -translate-x-[60%]',
+        imageClass: 'bottom-0 left-1/2 h-[190px] -translate-x-[60%] opacity-50',
         comingSoon: true,
         badge: 'bg-white/15 text-white ring-1 ring-white/25',
     },
@@ -165,7 +165,7 @@ export default function Dashboard() {
                                         alt=""
                                         aria-hidden="true"
                                         draggable="false"
-                                        className={`pointer-events-none absolute w-auto select-none object-contain ${goal.imageClass} ${locked ? 'opacity-90 saturate-[.85]' : ''}`}
+                                        className={`pointer-events-none absolute w-auto select-none object-contain ${goal.imageClass}`}
                                         animate={{ y: [0, -6, 0] }}
                                         transition={{ duration: 3.5 + index, repeat: Infinity, ease: 'easeInOut' }}
                                     />
