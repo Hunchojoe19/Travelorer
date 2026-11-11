@@ -14,7 +14,7 @@ import { TbPlane } from 'react-icons/tb';
 import { toast } from 'react-hot-toast';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import GoogleIcon from '../assets/Google.png';
-import { authErrorMessage, useAuth } from '../auth/AuthContext';
+import { authErrorMessage, needsEmailVerification, useAuth } from '../auth/AuthContext';
 
 const WHITE_LOGO = 'https://res.cloudinary.com/dc59hhvse/image/upload/v1768401091/Tourain_logo_u9puuh.png';
 const BLUE_LOGO = 'https://res.cloudinary.com/dc59hhvse/image/upload/v1768401090/Tourain_Logo_Blue_unuaup.png';
@@ -113,7 +113,7 @@ const Signup = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
-    const { signInWithGoogle, signInWithEmail, signUpWithEmail, resetPassword, isSignedIn } = useAuth();
+    const { signInWithGoogle, signInWithEmail, signUpWithEmail, resetPassword, isSignedIn, user } = useAuth();
 
     const initialLogin = searchParams.get('mode') ? searchParams.get('mode') === 'login' : Boolean(location.state?.login);
     const [isLogin, setIsLogin] = useState(initialLogin);
@@ -124,8 +124,8 @@ const Signup = () => {
 
     // Already signed in (e.g. came back to this page): go straight to the app.
     useEffect(() => {
-        if (isSignedIn && !submitting) navigate('/dashboard', { replace: true });
-    }, [isSignedIn, submitting, navigate]);
+        if (isSignedIn && !submitting) navigate(needsEmailVerification(user) ? '/verify-email' : '/dashboard', { replace: true });
+    }, [isSignedIn, submitting, navigate, user]);
 
     const setMode = (login) => {
         setIsLogin(login);
@@ -166,9 +166,14 @@ const Signup = () => {
         }
         setSubmitting(true);
         try {
-            if (isLogin) await signInWithEmail(email, password);
-            else await signUpWithEmail(email, password);
-            finishSignIn();
+            if (isLogin) {
+                const signedIn = await signInWithEmail(email, password);
+                if (needsEmailVerification(signedIn)) navigate('/verify-email', { replace: true });
+                else finishSignIn();
+            } else {
+                await signUpWithEmail(email, password);
+                navigate('/verify-email', { replace: true });
+            }
         } catch (error) {
             showError(error);
         } finally {
