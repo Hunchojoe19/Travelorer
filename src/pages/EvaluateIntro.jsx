@@ -3,10 +3,14 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { HiOutlineSparkles } from 'react-icons/hi';
 import AppHeader from '../components/app/AppHeader';
+import { useAuth } from '../auth/AuthContext';
+import { loadProfile } from '../lib/profileStore';
 import AiFab from '../components/app/AiFab';
 
 export default function EvaluateIntro() {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const profileDone = Boolean(loadProfile(user?.id).completedAt);
     return (
         <div className="min-h-screen bg-white">
             <AppHeader />
@@ -47,8 +51,19 @@ export default function EvaluateIntro() {
                         animate={{ left: ['-50%', '150%'] }}
                         transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 2.4, ease: 'easeInOut' }}
                     />
-                    <span className="relative">Get Started</span>
+                    <span className="relative">{profileDone ? 'View my profile' : 'Get Started'}</span>
                 </motion.button>
+                {profileDone && (
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.7 }}
+                        className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-[#2E9E2C]"
+                    >
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#3CC13B]" aria-hidden="true" />
+                        Your profile is complete
+                    </motion.p>
+                )}
 
                 <motion.section
                     initial={{ opacity: 0 }}
