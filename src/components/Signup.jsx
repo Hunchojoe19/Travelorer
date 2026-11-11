@@ -1,54 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { auth, googleProvider } from '../firebase';
-import { signInWithPopup } from 'firebase/auth';
-import { useNavigate, Link } from 'react-router-dom';
 import Navbar from './Navbar';
-import { sendSignInLinkToEmail } from 'firebase/auth';
 import GoogleIcon from '../assets/Google.png';
 import { toast } from 'react-hot-toast';
 
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [isLogin, setIsLogin] = useState(false);
-    const navigate = useNavigate();
 
-    const handleGoogleSignIn = async () => {
-        try {
-            // Explicitly use signInWithPopup and ensure the provider is configured
-            const result = await signInWithPopup(auth, googleProvider);
-            console.log('User signed in:', result.user);
-            toast.success('Successfully signed in with Google!');
-            navigate('/'); // Redirect to home after success
-        } catch (error) {
-            console.error('Error signing in with Google:', error);
-            // Handle common popup issues
-            if (error.code === 'auth/popup-blocked') {
-                toast.error('Sign-in popup was blocked by your browser. Please enable popups and try again.');
-            } else if (error.code === 'auth/cancelled-popup-request') {
-                // Ignore if user closed the popup
-            } else {
-                toast.error('An error occurred during Google Sign-In. Please try again.');
-            }
-        }
+    const handleGoogleSignIn = () => {
+        toast.error('Google sign-in is not available.');
     };
 
-    const handleEmailContinue = async (e) => {
+    const handleEmailContinue = (e) => {
         e.preventDefault();
-
-        const actionCodeSettings = {
-            url: window.location.origin + '/', // Redirect back to home
-            handleCodeInApp: true,
-        };
-
-        try {
-            await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-            window.localStorage.setItem('emailForSignIn', email);
-            toast.success(`Verification link sent to ${email}! Please check your inbox.`);
-        } catch (error) {
-            console.error('Error sending email link:', error);
-            toast.error('Failed to send verification link. Please try again.');
-        }
+        toast.error('Email sign-in is not available.');
     };
 
     return (
