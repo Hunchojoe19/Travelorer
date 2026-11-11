@@ -1,4 +1,4 @@
-import { getAI, getGenerativeModel, GoogleAIBackend } from 'firebase/ai';
+import { getAI, getGenerativeModel, GoogleAIBackend, ThinkingLevel } from 'firebase/ai';
 import countryList from 'react-select-country-list';
 import { app } from '../firebase';
 import { displayName, loadProfile, loadTravel } from './profileStore';
@@ -23,7 +23,8 @@ let model;
 function getModel() {
     if (!model) {
         const ai = getAI(app, { backend: new GoogleAIBackend() });
-        model = getGenerativeModel(ai, { model: MODEL });
+        // Give up on a request after 60s instead of the SDK's default 3 minutes.
+        model = getGenerativeModel(ai, { model: MODEL }, { timeout: 60000 });
     }
     return model;
 }
@@ -177,6 +178,35 @@ function cleanHistory(history) {
     return out;
 }
 
+const FIRST_WORD_TIMEOUT = 45000; // no text at all after this long → give up
+const STALL_TIMEOUT = 30000; // reply stops mid-way for this long → give up
+
+class AiTimeoutError extends Error {
+    constructor() {
+        super('Tourain AI timed out');
+        this.code = 'timeout';
+    }
+}
+
+/** Resolves the next stream chunk, or rejects if it takes longer than `ms`. */
+function nextWithin(iterator, ms) {
+    let timer;
+    return Promise.race([
+        iterator.next().finally(() => clearTimeout(timer)),
+        new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new AiTimeoutError()), ms);
+        }),
+    ]);
+}
+
+function chunkText(chunk) {
+    try {
+        return chunk.text() || '';
+    } catch {
+        return '';
+    }
+}
+
 /**
  * Sends `text` with the earlier conversation and streams the reply.
  * `history` is [{ role: 'user' | 'model', text }]. Calls onText(fullTextSoFar).
@@ -185,34 +215,52 @@ export async function streamReply({ mode, user, history, text, onText, signal })
     const turns = cleanHistory(history).slice(-MAX_HISTORY);
     // Gemini expects the history to start with a user turn.
     while (turns.length && turns[0].role !== 'user') turns.shift();
-    const chat = getModel().startChat({
-        systemInstruction: systemInstruction(mode, user),
-        history: turns.map((m) => ({ role: m.role, parts: [{ text: m.text }] })),
-        generationConfig: { temperature: 0.6, maxOutputTokens: mode === 'discover' ? 1400 : 700 },
-    });
-    const result = await chat.sendMessageStream(text);
+    const started = Date.now();
+
+    const open = (withThinkingLimit) =>
+        getModel()
+            .startChat({
+                systemInstruction: systemInstruction(mode, user),
+                history: turns.map((m) => ({ role: m.role, parts: [{ text: m.text }] })),
+                generationConfig: {
+                    temperature: 0.6,
+                    // Thinking tokens count towards this limit, so leave room for them.
+                    maxOutputTokens: mode === 'discover' ? 4096 : 2048,
+                    // Gemini 3 models "think" before answering; keep that short so replies start quickly.
+                    ...(withThinkingLimit && {
+                        thinkingConfig: { thinkingLevel: mode === 'discover' ? ThinkingLevel.LOW : ThinkingLevel.MINIMAL },
+                    }),
+                },
+            })
+            .sendMessageStream(text);
+
+    let result;
+    try {
+        result = await open(true);
+    } catch (error) {
+        // Models without thinking levels (e.g. if VITE_GEMINI_MODEL is changed) reject the setting.
+        if (!/thinking/i.test(String(error?.message))) throw error;
+        result = await open(false);
+    }
+
+    const iterator = result.stream[Symbol.asyncIterator]();
     let full = '';
-    for await (const chunk of result.stream) {
-        if (signal?.aborted) break;
-        let piece = '';
-        try {
-            piece = chunk.text();
-        } catch {
-            piece = '';
-        }
+    for (;;) {
+        if (signal?.aborted) return full;
+        const { value, done } = await nextWithin(iterator, full ? STALL_TIMEOUT : FIRST_WORD_TIMEOUT);
+        if (done) break;
+        const piece = chunkText(value);
         if (piece) {
+            if (!full && import.meta.env.DEV) console.info(`[Tourain AI] first words after ${Date.now() - started}ms`);
             full += piece;
             onText(full);
         }
     }
     if (!full.trim()) {
         const response = await result.response;
-        try {
-            full = response.text();
-        } catch {
-            full = '';
-        }
+        full = chunkText(response);
         if (full) onText(full);
+        else if (import.meta.env.DEV) console.warn('[Tourain AI] empty reply', response?.candidates?.[0]?.finishReason, response);
     }
     return full;
 }
@@ -230,6 +278,7 @@ function describeAiError(error) {
     const raw = `${error?.code || ''} ${error?.message || error || ''}`.replace(/https?:\/\/\S+/g, '');
     const status = Number(error?.customErrorData?.status || raw.match(/\[(\d{3})/)?.[1] || 0);
     if (typeof navigator !== 'undefined' && navigator.onLine === false) return "You're offline. Check your connection and try again.";
+    if (error?.code === 'timeout' || /timed? ?out|deadline|aborted/i.test(raw)) return 'Tourain AI took too long to answer. Please try again.';
     if (/app.?check|attestation|recaptcha/i.test(raw)) {
         return 'Tourain AI could not verify this browser (App Check). If you run this site, add the App Check debug token or reCAPTCHA key described in the setup notes.';
     }
