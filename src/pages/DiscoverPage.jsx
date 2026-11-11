@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { HiArrowLeft, HiOutlineHome } from 'react-icons/hi';
+import { HiArrowLeft, HiOutlineViewGrid } from 'react-icons/hi';
 import {
     TbCurrencyDollar,
     TbFileText,
@@ -20,7 +20,7 @@ import DiscoverChat from '../components/discover/DiscoverChat';
 import IntelDashboard from '../components/discover/IntelDashboard';
 
 const RAIL = [
-    { label: 'Home', icon: HiOutlineHome, to: '/dashboard' },
+    { label: 'Dashboard', icon: HiOutlineViewGrid, to: '/dashboard' },
     { label: 'Discover', icon: TbWorld, to: '/discover' },
     { label: 'Personal profile', icon: TbFileText, to: '/evaluate/profile' },
     { label: 'Travel history', icon: TbPlaneDeparture, to: '/evaluate/travel' },
@@ -54,6 +54,7 @@ function AccountMenu({ initials, align = 'right', up = false }) {
     }, [open]);
     const items = [
         ['Dashboard', () => navigate('/dashboard')],
+        ['Tourain website', () => navigate('/')],
         ['My profile', () => navigate('/evaluate/profile')],
         ['Travel history', () => navigate('/evaluate/travel')],
         [
@@ -114,10 +115,10 @@ function Rail({ initials }) {
     return (
         <nav className="hidden w-[72px] shrink-0 flex-col items-center border-r border-[#1d2620] py-5 md:flex" aria-label="Tourain">
             <Link
-                to="/dashboard"
+                to="/"
                 className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#c9a84c] font-serif text-lg font-bold text-[#15130c] shadow-[0_0_24px_rgba(201,168,76,0.25)]"
-                aria-label="Tourain dashboard"
-                title="Dashboard"
+                aria-label="Tourain website"
+                title="Tourain website"
             >
                 T
             </Link>
@@ -189,8 +190,8 @@ export default function DiscoverPage() {
         <div className="flex h-screen flex-col overflow-hidden bg-[#070a08] text-[#e9e6dc] md:p-4">
             {/* Phone/tablet top bar: switch between the chat and the dashboard */}
             <div className="flex shrink-0 items-center gap-3 border-b border-[#1d2620] px-4 py-3 md:mb-3 md:rounded-2xl md:border lg:hidden">
-                <Link to="/dashboard" className="flex items-center gap-1 rounded-full px-2 py-1.5 text-xs font-medium text-[#d8b85a] hover:bg-white/5" aria-label="Back to home">
-                    <HiArrowLeft className="h-4 w-4" /> Home
+                <Link to="/dashboard" className="flex items-center gap-1 rounded-full px-2 py-1.5 text-xs font-medium text-[#d8b85a] hover:bg-white/5" aria-label="Back to dashboard">
+                    <HiArrowLeft className="h-4 w-4" /> Dashboard
                 </Link>
                 <div className="flex flex-1 rounded-full bg-[#121813] p-1 text-sm" role="tablist" aria-label="Discover sections">
                     {[
@@ -234,7 +235,7 @@ export default function DiscoverPage() {
                             to="/dashboard"
                             className="ml-4 hidden items-center gap-1.5 rounded-full border border-[#243026] px-3 py-1.5 text-xs font-medium text-[#d8b85a] transition-colors hover:border-[#c9a84c]/50 hover:bg-[#c9a84c]/10 lg:flex"
                         >
-                            <HiOutlineHome className="h-3.5 w-3.5" /> Home
+                            <HiOutlineViewGrid className="h-3.5 w-3.5" /> Dashboard
                         </Link>
                         <span className="ml-auto hidden items-center gap-1.5 text-sm text-[#7fae7a] sm:flex">
                             <span className="h-1.5 w-1.5 rounded-full bg-[#7fae7a]" /> All signals live
