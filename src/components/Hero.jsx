@@ -64,10 +64,10 @@ const Hero = () => {
 
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                         <Link
-                            to="/waitlist"
-                            className="px-8 py-4 bg-black text-white text-lg hover:bg-gray-400 shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded-full font-semibold transition-transform hover:scale-105"
+                            to="/signup?mode=signup"
+                            className="px-8 py-4 bg-black text-white text-lg hover:bg-gray-700 shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded-full font-semibold transition-transform hover:scale-105"
                         >
-                            Join the waitlist
+                            Get started
                         </Link>
                         {/* <button className="flex items-center gap-3 px-6 py-4 text-gray-800 font-medium hover:text-black transition-colors">
                             <div className="w-10 h-10 bg-[#000000] rounded-full flex items-center justify-center shadow-md">
