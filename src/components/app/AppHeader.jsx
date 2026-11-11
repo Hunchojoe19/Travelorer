@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { HiOutlineHome } from 'react-icons/hi';
 import { useAuth } from '../../auth/AuthContext';
 
 const LOGO = 'https://res.cloudinary.com/dc59hhvse/image/upload/v1768401090/Tourain_Logo_Blue_unuaup.png';
@@ -9,6 +10,7 @@ const LOGO = 'https://res.cloudinary.com/dc59hhvse/image/upload/v1768401090/Tour
 export default function AppHeader() {
     const navigate = useNavigate();
     const { signOut } = useAuth();
+    const { pathname } = useLocation();
     return (
         <motion.header
             initial={{ y: -64, opacity: 0 }}
@@ -20,16 +22,27 @@ export default function AppHeader() {
                 <button type="button" onClick={() => navigate('/dashboard')} aria-label="Go to dashboard">
                     <img src={LOGO} alt="Tourain" className="h-[24px] w-[122px]" />
                 </button>
-                <button
-                    type="button"
-                    onClick={() => {
-                        signOut();
-                        navigate('/', { replace: true });
-                    }}
-                    className="rounded-full px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
-                >
-                    Sign out
-                </button>
+                <div className="flex items-center gap-1">
+                    {pathname !== '/dashboard' && (
+                        <button
+                            type="button"
+                            onClick={() => navigate('/dashboard')}
+                            className="flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-[#1E3F94] transition-colors hover:bg-[#1E3F94]/5"
+                        >
+                            <HiOutlineHome className="h-4 w-4" aria-hidden="true" /> Home
+                        </button>
+                    )}
+                    <button
+                        type="button"
+                        onClick={() => {
+                            signOut();
+                            navigate('/', { replace: true });
+                        }}
+                        className="rounded-full px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+                    >
+                        Sign out
+                    </button>
+                </div>
             </div>
         </motion.header>
     );
