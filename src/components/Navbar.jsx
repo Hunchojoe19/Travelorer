@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HiMenu, HiX } from 'react-icons/hi';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
 
 const NavLink = ({ href, children, isScrolled, forceBlue }) => {
 
@@ -25,6 +26,7 @@ const Navbar = ({ forceBlue = false, logoOnly = false }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(forceBlue);
     const pathName = useLocation().pathname;
+    const { isSignedIn } = useAuth();
 
     useEffect(() => {
         if (logoOnly) {
@@ -63,9 +65,27 @@ const Navbar = ({ forceBlue = false, logoOnly = false }) => {
                             {pathName !== '/waitlist' && <NavLink href="#why" isScrolled={isScrolled} forceBlue={forceBlue}>Why Tourain?</NavLink>}
                             {pathName !== '/waitlist' && <NavLink href="#features" isScrolled={isScrolled} forceBlue={forceBlue}>Features</NavLink>}
                             {pathName === '/waitlist' && <NavLink href="/" isScrolled={isScrolled} forceBlue={forceBlue}>Home</NavLink>}
-                            {pathName !== '/waitlist' && <Link to="/waitlist" className={`px-5 cursor-pointer py-2 rounded-full text-sm font-medium transition-colors ${forceBlue ? 'bg-white text-[#003B95] hover:bg-gray-100' : 'bg-black text-white hover:bg-gray-400'}`}>
-                                Join the waitlist
-                            </Link>}
+                            {isSignedIn ? (
+                                <Link to="/dashboard" className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${forceBlue ? 'bg-white text-[#003B95] hover:bg-gray-100' : 'bg-black text-white hover:bg-gray-700'}`}>
+                                    Dashboard
+                                </Link>
+                            ) : (
+                                <div className="flex items-center gap-3">
+                                    <Link
+                                        to="/signup?mode=login"
+                                        className={`px-5 py-2 rounded-full text-sm font-medium border transition-colors ${
+                                            isScrolled && !forceBlue
+                                                ? 'border-blue-400 text-blue-500 hover:bg-blue-50'
+                                                : 'border-white/70 text-white hover:bg-white/10'
+                                        }`}
+                                    >
+                                        Log in
+                                    </Link>
+                                    <Link to="/signup?mode=signup" className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${forceBlue ? 'bg-white text-[#003B95] hover:bg-gray-100' : 'bg-black text-white hover:bg-gray-700'}`}>
+                                        Sign up
+                                    </Link>
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -90,7 +110,14 @@ const Navbar = ({ forceBlue = false, logoOnly = false }) => {
                         {pathName !== '/waitlist' && <a href="#why" onClick={() => setIsOpen(false)} className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Why Tourain</a>}
                         {pathName === '/waitlist' && <a href="/" onClick={() => setIsOpen(false)} className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Home</a>}
                         {pathName !== '/waitlist' && <a href="#features" onClick={() => setIsOpen(false)} className={`block px-3 py-2 rounded-md font-medium ${forceBlue ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-gray-50'}`}>Features</a>}
-                        {pathName !== '/waitlist' && <Link to="/waitlist" onClick={() => setIsOpen(false)} className={`block px-3 py-2 text-center rounded-full font-medium mt-4 ${forceBlue ? 'bg-white text-[#003B95]' : 'bg-black text-white'}`}> Join the waitlist</Link>}
+                        {isSignedIn ? (
+                            <Link to="/dashboard" onClick={() => setIsOpen(false)} className={`block px-3 py-2 text-center rounded-full font-medium mt-4 ${forceBlue ? 'bg-white text-[#003B95]' : 'bg-black text-white'}`}>Dashboard</Link>
+                        ) : (
+                            <div className="mt-4 grid grid-cols-2 gap-3">
+                                <Link to="/signup?mode=login" onClick={() => setIsOpen(false)} className={`block px-3 py-2 text-center rounded-full font-medium border ${forceBlue ? 'border-white/70 text-white' : 'border-gray-300 text-gray-800'}`}>Log in</Link>
+                                <Link to="/signup?mode=signup" onClick={() => setIsOpen(false)} className={`block px-3 py-2 text-center rounded-full font-medium ${forceBlue ? 'bg-white text-[#003B95]' : 'bg-black text-white'}`}>Sign up</Link>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
