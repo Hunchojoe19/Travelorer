@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import EvaluateIntro from './pages/EvaluateIntro';
 import ProfileWizard from './pages/ProfileWizard';
 import TravelWizard from './pages/TravelWizard';
+import DiscoverPage from './pages/DiscoverPage';
 import RequireAuth from './auth/RequireAuth';
 import { AuthProvider } from './auth/AuthContext';
 import { Toaster } from 'react-hot-toast';
@@ -34,6 +35,7 @@ function App() {
                     <Route path="/evaluate" element={<RequireAuth><EvaluateIntro /></RequireAuth>} />
                     <Route path="/evaluate/profile" element={<RequireAuth><ProfileWizard /></RequireAuth>} />
                     <Route path="/evaluate/travel/:step?" element={<RequireAuth><TravelWizard /></RequireAuth>} />
+                    <Route path="/discover" element={<RequireAuth><DiscoverPage /></RequireAuth>} />
 
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
