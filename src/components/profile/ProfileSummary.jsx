@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { HiOutlineArrowRight, HiOutlineLockClosed, HiOutlinePencilAlt } from 'react-icons/hi';
+import { HiOutlineArrowRight, HiOutlinePencilAlt } from 'react-icons/hi';
 import countryList from 'react-select-country-list';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import { EMPLOYMENT_OPTIONS, GENDER_LABELS, MARITAL_OPTIONS, PROFESSION_OPTIONS, labelFor, needsProfession } from './options';
@@ -30,7 +30,7 @@ function Row({ label, value }) {
  * Read-only view of a completed profile. Changing anything requires clicking
  * "Update profile" first.
  */
-export default function ProfileSummary({ profile, onEdit }) {
+export default function ProfileSummary({ profile, onEdit, onContinue }) {
     const country = useMemo(() => (profile.country ? countryList().getLabel(profile.country) : ''), [profile.country]);
     const updated = profile.updatedAt || profile.completedAt;
 
@@ -92,15 +92,15 @@ export default function ProfileSummary({ profile, onEdit }) {
             </div>
 
             <div className="mt-8 flex flex-col items-center gap-2">
-                <button
+                <motion.button
                     type="button"
-                    aria-disabled="true"
-                    title="Travel details are coming soon"
-                    className="inline-flex cursor-not-allowed items-center gap-2 rounded-lg bg-[#2F6FED]/50 px-8 py-3 text-sm font-semibold text-white"
+                    onClick={onContinue}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="inline-flex items-center gap-2 rounded-lg bg-[#2F6FED] px-8 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-[#245ad0]"
                 >
-                    <HiOutlineLockClosed className="h-4 w-4" /> Continue to travel details <HiOutlineArrowRight className="h-4 w-4" />
-                </button>
-                <p className="text-xs text-gray-400">Travel details are coming soon.</p>
+                    Continue to travel history <HiOutlineArrowRight className="h-4 w-4" />
+                </motion.button>
             </div>
         </motion.section>
     );
