@@ -3,13 +3,13 @@
  *
  * Firebase's free plan can't send custom emails, so this uses EmailJS
  * (https://www.emailjs.com, free tier) straight from the browser. Set these in .env:
- *   VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, VITE_EMAILJS_PUBLIC_KEY
+ *   VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, VITE_EMAILJS_PUBLIC_
  * The template receives {{to_email}}, {{to_name}} and {{app_url}}.
  * If they aren't set, nothing is sent and the app carries on normally.
  */
 const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_;
 
 export const isWelcomeEmailConfigured = Boolean(SERVICE_ID && TEMPLATE_ID && PUBLIC_KEY);
 
